@@ -2,27 +2,41 @@
 
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { ChevronLeft } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import * as yup from "yup";
-
 import { Button } from "@/components/ui/button";
+type Login ={
+  email:string,
+  password:string
+}
 
 export default function Login() {
 const router = useRouter();
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail]= useState<string>("")
   const [error, setError] = useState("");
-  const passwordCheck = yup.string()
-  .min(8, "Password at least 8 characters")
-  .required("Please enter password")
-    const handleSubmit =  () => {
-         passwordCheck.validate({ password });
-        router.push("/"); 
-    };
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+
+
+    const handleSubmit =  async () => {
+      try {
+      const response = await axios.post("http://localhost:4040/user/login", {
+        email: email,
+        password: password, 
+       
+    }
+    
+  );
+  console.log(response)
+// if (email===response.data.email)
+
+  } catch (error){
+
+  }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
@@ -40,7 +54,7 @@ const router = useRouter();
     // });
 
 
-
+  }
   return (
     <div className="max-w-[1200px] w-[100%] m-auto">
       {/* input  */}

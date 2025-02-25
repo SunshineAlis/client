@@ -95,7 +95,7 @@ export default function SignUp() {
               Already have an account?
               <span
                 className="text-blue-500 ml-2 cursor-pointer"
-                onClick={() => router.push("/Password")}
+                onClick={() => router.push("/Login")}
               >
                 Log in
               </span>
@@ -103,7 +103,7 @@ export default function SignUp() {
           </div>
         </div>
       </div>
-      <div className="w-[50%]">Picture</div>
+      <div className="w-[50%]"></div>
     </div>
   );
 }
