@@ -7,9 +7,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
 
+
 type Email = {
   Email: string;
-  
 };
 
 export default function SignUp() {
@@ -31,9 +31,7 @@ export default function SignUp() {
     try {
       const response = await axios.post("http://localhost:4040/user", {
         email: email,
-        
       });
-     
 
       if (response.status === 200) {
         router.push("/Password"); //
@@ -42,12 +40,10 @@ export default function SignUp() {
       }
     } catch (err: any) {
       console.error("Server Error:", err);
-  
+
       if (err.response) {
-       
         setError(err.response.data.message || "Something went wrong");
       } else {
-       
         setError("Error connecting to server. Please try again later.");
       }
     }
@@ -55,7 +51,7 @@ export default function SignUp() {
 
   return (
     <div className="flex max-w-[1200px] w-[100%] m-auto">
-      <div className="w-[50%] mx-auto p-8 bg-white shadow-md rounded-lg">
+      <div className="w-[50%] mx-auto my-[200px] p-8 bg-white shadow-md rounded-lg">
         <div className="w-[70%] m-auto">
           <Button
             variant="outline"
@@ -84,10 +80,11 @@ export default function SignUp() {
 
             <Button
               type="submit"
-              className="w-full text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-lg"
-              variant="secondary"
+              className="w-full text-white bg-blue-600 hover:bg-blue-900 py-3 rounded-lg"
               onClick={handleClick}
-            ></Button>
+            >
+              Let's go
+            </Button>
 
             {error && <p className="text-red-500 text-center">{error}</p>}
 

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
+import Login from "../Login/page";
+
 
 export default function SignUp() {
   const router = useRouter();
@@ -29,66 +31,33 @@ export default function SignUp() {
   const handleSubmit = async () => {
     if (!validateForm()) return;
     setError("");
-  
+
     try {
       const response = await axios.post("http://localhost:4040/user/password", {
         password: password,
       });
-  
+
       if (response.status === 200) {
-        router.push("/Login"); //
+        router.push("/Login");
       } else {
         setError(response.data.message || "Failed to save user");
       }
     } catch (err: any) {
       console.error("Server Error:", err);
-  
+
       if (err.response) {
-        // Серверээс хариу ирсэн бол алдааны мессежийг харуулах
         setError(err.response.data.message || "Something went wrong");
       } else {
-        // Сервер рүү холбогдож чадахгүй байгаа бол
         setError("Error connecting to server. Please try again later.");
       }
     }
   };
 
-
-
-
-
-
-
-
-  // const handleSubmit = async () => {
-  //   if (!validateForm()) return;
-  //   setError("");
-
-  //   try {
-  //     const response = await axios.post("http://localhost:4040/user/password", {
-  //       password: password,
-  //     });
-
-  //     if (response.status === 200) {
-  //       router.push("/Login"); //
-  //     } else {
-  //       setError(response.data.message || "Failed to save user");
-  //     }
-  //   } catch (err) {
-  //     setError("Error connecting to server");
-  //   }
-  // };
-
   return (
     <div className="flex max-w-[1200px] w-[100%] m-auto">
-      <div className="w-[50%] mx-auto p-8 bg-white shadow-md rounded-lg">
-        <div className="w-[70%] m-auto">
-          <Button
-            variant="outline"
-            size="icon"
-            className="mb-4"
-            onClick={() => router.back()}
-          >
+      <div className="w-[50%] mx-auto   bg-white shadow-md rounded-lg">
+        <div className="w-[60%] m-auto px-4 py-10 my-2">
+          <Button size="icon" className="mb-4" onClick={() => router.back()}>
             <ChevronLeft />
           </Button>
           <h1 className="text-2xl font-bold text-center text-gray-900">
@@ -127,7 +96,7 @@ export default function SignUp() {
 
             <Button
               type="submit"
-              className="w-full text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-lg"
+              className="w-full text-white bg-blue-600 hover:bg-blue-900 py-3 rounded-lg"
               variant="secondary"
               onClick={handleSubmit}
             >
@@ -137,7 +106,9 @@ export default function SignUp() {
           </div>
         </div>
       </div>
-      <div className="w-[50%]">zurag</div>
+      <div className="w-[50%]">
+        <Login />
+      </div>
     </div>
   );
 }
