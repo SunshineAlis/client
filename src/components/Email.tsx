@@ -9,6 +9,7 @@ import axios from "axios";
 
 type Email = {
   Email: string;
+  
 };
 
 export default function SignUp() {
@@ -18,44 +19,37 @@ export default function SignUp() {
 
   const validateForm = () => {
     const emailRe = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
     if (!emailRe.test(email)) {
       setError("Your email format is incorrect");
       return false;
     }
     return true;
   };
-  const handleSubmit = async () => {
+  const handleClick = async () => {
     if (!validateForm()) return;
     setError("");
-
     try {
-      // 第一步：查询邮箱是否存在
-      const emailCheckResponse = await axios.post(
-        "http://localhost:4040/user/check-email",
-        { email: email }
-      );
+      const response = await axios.post("http://localhost:4040/user", {
+        email: email,
+        
+      });
+     
 
-      if (emailCheckResponse.status === 200 && emailCheckResponse.data.exists) {
-        // 第二步：查询与该邮箱关联的密码
-        const passwordResponse = await axios.post(
-          "http://localhost:4040/user/get-password",
-          { email: email }
-        );
-
-        // if (passwordResponse.status === 200) {
-        //   const password = passwordResponse.data.password;
-        //   console.log("Password:", password);
-        //   router.push("/Password"); // 跳转到密码页面
-        // }
-        // else {
-        //   setError("Failed to fetch password");
-        // }
+      if (response.status === 200) {
+        router.push("/Password"); //
       } else {
-        setError("Email does not exist");
+        setError(response.data.message || "Failed to save user");
       }
-    } catch (err) {
-      setError("Error connecting to server");
+    } catch (err: any) {
+      console.error("Server Error:", err);
+  
+      if (err.response) {
+       
+        setError(err.response.data.message || "Something went wrong");
+      } else {
+       
+        setError("Error connecting to server. Please try again later.");
+      }
     }
   };
 
@@ -92,7 +86,7 @@ export default function SignUp() {
               type="submit"
               className="w-full text-white bg-blue-600 hover:bg-blue-700 py-3 rounded-lg"
               variant="secondary"
-              onClick={handleSubmit}
+              onClick={handleClick}
             ></Button>
 
             {error && <p className="text-red-500 text-center">{error}</p>}

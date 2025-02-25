@@ -26,26 +26,58 @@ export default function SignUp() {
     }
     return true;
   };
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
     setError("");
-
+  
     try {
       const response = await axios.post("http://localhost:4040/user/password", {
         password: password,
       });
-
+  
       if (response.status === 200) {
         router.push("/Login"); //
       } else {
         setError(response.data.message || "Failed to save user");
       }
-    } catch (err) {
-      setError("Error connecting to server");
+    } catch (err: any) {
+      console.error("Server Error:", err);
+  
+      if (err.response) {
+        // Серверээс хариу ирсэн бол алдааны мессежийг харуулах
+        setError(err.response.data.message || "Something went wrong");
+      } else {
+        // Сервер рүү холбогдож чадахгүй байгаа бол
+        setError("Error connecting to server. Please try again later.");
+      }
     }
   };
+
+
+
+
+
+
+
+
+  // const handleSubmit = async () => {
+  //   if (!validateForm()) return;
+  //   setError("");
+
+  //   try {
+  //     const response = await axios.post("http://localhost:4040/user/password", {
+  //       password: password,
+  //     });
+
+  //     if (response.status === 200) {
+  //       router.push("/Login"); //
+  //     } else {
+  //       setError(response.data.message || "Failed to save user");
+  //     }
+  //   } catch (err) {
+  //     setError("Error connecting to server");
+  //   }
+  // };
 
   return (
     <div className="flex max-w-[1200px] w-[100%] m-auto">
