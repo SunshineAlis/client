@@ -27,6 +27,18 @@ const router = useRouter();
     }
 
     
+    // app.post("/login", async (req, res) => {
+    //   const { username, password } = req.body;
+    //   const user = await findUserByUsername(username);
+    
+    //   if (!user || !(await verifyPassword(password, user.password))) {
+    //     return res.status(401).json({ message: "Invalid credentials" });
+    //   }
+    
+    //   const token = generateToken(user);
+    //   res.json({ token });
+    // });
+
 
 
   return (
