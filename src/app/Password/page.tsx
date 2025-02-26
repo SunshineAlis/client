@@ -5,8 +5,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
+import { passwordValidSchema } from "../utils/loginValidation";
 import axios from "axios";
 import Login from "../Login/page";
+import { User } from "@/type";
 
 
 export default function SignUp() {
@@ -17,24 +19,28 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
 
   const validateForm = () => {
-    const passRe = /^\d{8,}$/;
-    if (!passRe.test(password)) {
-      setError("Password must be at least 8 digits and contain only numbers.");
+    try {
+      passwordValidSchema.validateSync(
+        { password, confirmPassword },
+      );
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return false;
+      }
+      return true;
+    } catch (err: any) {
+      setError(err.errors.join("\n") || "Validation failed");
       return false;
     }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match!");
-      return false;
-    }
-    return true;
   };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
     setError("");
 
     try {
       const response = await axios.post("http://localhost:4040/user/password", {
-        password: password,
+        password,
       });
 
       if (response.status === 200) {
@@ -44,14 +50,10 @@ export default function SignUp() {
       }
     } catch (err: any) {
       console.error("Server Error:", err);
-
-      if (err.response) {
-        setError(err.response.data.message || "Something went wrong");
-      } else {
-        setError("Error connecting to server. Please try again later.");
-      }
+      setError(err.response?.data?.message || "Something went wrong");
     }
   };
+
 
   return (
     <div className="flex max-w-[1200px] w-[100%] m-auto">
@@ -61,10 +63,10 @@ export default function SignUp() {
             <ChevronLeft />
           </Button>
           <h1 className="text-2xl font-bold text-center text-gray-900">
-            Create your account
+            Create a strong password
           </h1>
           <p className="mt-2 text-center text-gray-600">
-            Sign up to explore your favorite dishes
+            Create a strong password with letters, numbers
           </p>
 
           <div className="mt-6 flex flex-col gap-4">
@@ -83,7 +85,7 @@ export default function SignUp() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
               <Checkbox
                 id="show-password"
                 checked={showPassword}
