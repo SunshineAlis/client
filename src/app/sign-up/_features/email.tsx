@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
 
-
 type Email = {
   Email: string;
 };
 
-export default function SignUp() {
+export const EmailStep = ({
+  setStep,
+  setUserData,
+}: {
+  setStep: Dispatch<SetStateAction<string>>;
+  setUserData: (value: string) => void;
+}) => {
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState("");
@@ -25,6 +30,7 @@ export default function SignUp() {
     }
     return true;
   };
+
   const handleClick = async () => {
     if (!validateForm()) return;
     setError("");
@@ -32,9 +38,10 @@ export default function SignUp() {
       const response = await axios.post("http://localhost:4040/user", {
         email: email,
       });
-
+      setStep("password");
+      console.log(response);
       if (response.status === 200) {
-        router.push("/Password"); //
+        setUserData(email);
       } else {
         setError(response.data.message || "Failed to save user");
       }
@@ -103,4 +110,4 @@ export default function SignUp() {
       <div className="w-[50%]"></div>
     </div>
   );
-}
+};

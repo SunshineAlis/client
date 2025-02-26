@@ -5,12 +5,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
-import { passwordValidSchema } from "../utils/loginValidation";
 import axios from "axios";
-import Login from "../Login/page";
 import { User } from "@/type";
 
-export default function SignUp() {
+export const Password = ({ userData }: { userData: string }) => {
   const router = useRouter();
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,7 +40,7 @@ export default function SignUp() {
 
     try {
       const response = await axios.post("http://localhost:4040/user", {
-        email: "",
+        email: userData,
         password,
       });
 
@@ -112,9 +110,9 @@ export default function SignUp() {
           </div>
         </div>
       </div>
-      <div className="w-[50%]">
+      {/* <div className="w-[50%]">
         <Login />
-      </div>
+      </div> */}
     </div>
   );
-}
+};
