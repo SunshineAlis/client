@@ -41,7 +41,7 @@ export default function SignUp() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:4040/user", {
+      const response = await axios.post("http://localhost:3030/user", {
         email: "",
         password,
       });

@@ -22,7 +22,7 @@ export default function Login() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:4040/user/login", {
+      const response = await axios.post("http://localhost:3030/user/login", {
         email: email,
         password: password,
       });
