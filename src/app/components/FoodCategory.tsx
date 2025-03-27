@@ -110,7 +110,7 @@ export default function FoodCategory() {
     }, [successMessage]);
 
     return (
-        <div className="p-4">
+        <div className="">
             <CategoryComponent
                 categories={categories}
                 foodCountByCategory={foodCountByCategory}

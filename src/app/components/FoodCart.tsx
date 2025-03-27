@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import AddToCardsModal from "../../OrderCompenent/AddToCards";
 
 type Food = {
     _id: string;
@@ -12,27 +13,24 @@ type Food = {
 
 type FoodProps = {
     food: Food;
-    addToOrder?: (food: Food) => void;
+    addToOrder: (food: Food, quantity: number) => void;
 };
 
 const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
-        <div className="relative border border-gray-300 shadow-lg flex flex-col justify-center items-center rounded-xl bg-white p-4 transition-transform hover:scale-105">
+        <div className="relative border border-gray-300 shadow-lg flex flex-col justify-center items-center rounded-xl bg-white p-4">
             {food.image && typeof food.image === "string" && (
-                <img
-                    src={food.image}
-                    alt={food.foodName}
-                    className="h-36 w-[90%] object-cover rounded-lg"
-                />
+                <img src={food.image} alt={food.foodName} className="h-36 w-[90%] object-cover rounded-lg" />
             )}
             <button
-                className="absolute top-[30%] right-[15%] w-10 h-10 rounded-full bg-white text-2xl text-black font-semibold transition-colors hover:bg-red-600"
-                onClick={() => addToOrder && addToOrder(food)}
+                className="absolute top-[30%] right-[10%] w-10 h-10 rounded-full bg-white text-2xl text-black font-semibold transition-colors hover:bg-red-600"
+                onClick={() => setIsModalOpen(true)}
             >
                 +
             </button>
+
             <div className="flex justify-between items-center mt-3 w-full px-2">
                 <span className="text-red-500 font-bold truncate w-[70%] overflow-hidden hover:whitespace-normal hover:bg-white hover:shadow-md px-2 py-1 rounded-md">
                     {food.foodName}
@@ -45,7 +43,13 @@ const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
                     {food.ingredients}
                 </span>
             </p>
-        </div >
+            <AddToCardsModal
+                food={food}
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                addToOrder={addToOrder}
+            />
+        </div>
     );
 };
 

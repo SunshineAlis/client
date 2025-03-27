@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import FoodCard from "./FoodCart";
-import OrderCards from "./OrderCards"; // 
-
-type Category = {
-  _id: string;
-  categoryName: string;
-  foods?: Food[];
-};
+import OrderList from "@/OrderCompenent/OrderListModal";
+import Header from "./ClientHeader";
+import Basket from "../components/basket";
+import FoodCategory from "./FoodCategory";
+import OrderStatus from "@/OrderCompenent/OrderStatus";
+import SubmitOrder from "../components/SubmitOrder";
 
 type Food = {
   _id: string;
@@ -20,12 +19,34 @@ type Food = {
   imageUrl?: string;
 };
 
+type Category = {
+  _id: string;
+  categoryName: string;
+  foods?: Food[];
+};
+
+type OrderItem = {
+  food: string; // Or `Food` if you want to store the whole object
+  quantity: number;
+};
+
+type Order = {
+  totalPrice: number;
+  foodOrderItems: OrderItem[];
+};
+
 export default function FoodClient() {
   const [categoriesWithFoods, setCategoriesWithFoods] = useState<Category[]>([]);
   const [orderedFoods, setOrderedFoods] = useState<{ food: Food; quantity: number }[]>([]);
-  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [orderStatus, setOrderStatus] = useState<"" | "success" | "error">("");
 
   useEffect(() => {
+    const savedOrder = localStorage.getItem("orderedFoods");
+    if (savedOrder) {
+      setOrderedFoods(JSON.parse(savedOrder));
+    }
+
     const fetchCategoriesWithFoods = async () => {
       try {
         const { data } = await axios.get("http://localhost:3030/category");
@@ -52,43 +73,99 @@ export default function FoodClient() {
     fetchCategoriesWithFoods();
   }, []);
 
-  if (categoriesWithFoods.length === 0) {
-    return <p className="text-center text-gray-500">Loading foods...</p>;
-  }
-
   const allFoods = categoriesWithFoods.flatMap((category) => category.foods || []);
 
-  const addToOrder = (food: Food) => {
+  const addToOrder = (food: Food, quantity: number) => {
     setOrderedFoods((prev) => {
       const existingOrder = prev.find((item) => item.food._id === food._id);
+      let updatedOrders;
+
       if (existingOrder) {
-        return prev.map((item) =>
-          item.food._id === food._id ? { ...item, quantity: item.quantity + 1 } : item
+        updatedOrders = prev.map((item) =>
+          item.food._id === food._id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
         );
       } else {
-        return [...prev, { food, quantity: 1 }];
+        updatedOrders = [...prev, { food, quantity }];
       }
+
+      localStorage.setItem("orderedFoods", JSON.stringify(updatedOrders));
+      return updatedOrders;
+    });
+
+    setIsOpen(true);
+  };
+
+  const toggleSidebar = () => {
+    setIsOpen((prev) => !prev);
+  };
+
+  const updateQuantity = (foodId: string, newQuantity: number) => {
+    setOrderedFoods((prev) => {
+      const updatedOrders = prev.map((item) =>
+        item.food._id === foodId ? { ...item, quantity: newQuantity } : item
+      );
+      localStorage.setItem("orderedFoods", JSON.stringify(updatedOrders));
+      return updatedOrders;
     });
   };
 
-  return (
-    <div className="p-4 bg-gray-100 max-w-[1200px] w-full m-auto rounded-2xl flex gap-6">
+  const removeItem = (index: number) => {
+    setOrderedFoods((prev) => {
+      const updatedOrders = prev.filter((_, idx) => idx !== index);
+      localStorage.setItem("orderedFoods", JSON.stringify(updatedOrders));
+      return updatedOrders;
+    });
+  };
 
-      <div className="w-3/4">
-        <h2 className="text-xl font-bold mb-4">Foods by Category</h2>
-        <div className="grid grid-cols-4 gap-2">
-          {allFoods.map((food) => (
-            <FoodCard key={food._id} food={food} addToOrder={addToOrder} />
+
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      <Header toggleSidebar={toggleSidebar} orderedFoodsCount={orderedFoods.length} />
+      <FoodCategory />
+      <div className="p-4 max-w-[1000px] w-full m-auto rounded-2xl flex gap-6 relative">
+        <div className="w-full">
+          <h2 className="text-xl font-bold mb-4">Foods by Category</h2>
+          <h2>All of Dishes</h2>
+          <div className="grid grid-cols-4 gap-2">
+            {allFoods.map((food) => (
+              <FoodCard key={food._id} food={food} addToOrder={addToOrder} />
+            ))}
+          </div>
+
+          {categoriesWithFoods.map((category) => (
+            <div key={category._id}>
+              <h3 className="text-lg font-semibold mt-4 mb-2">{category.categoryName}</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {category.foods?.map((food) => (
+                  <FoodCard key={food._id} food={food} addToOrder={addToOrder} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
+        <OrderList
+          orderedFoods={orderedFoods}
+          setOrderedFoods={setOrderedFoods}
+          isOpen={isOpen}
+          toggleSidebar={toggleSidebar}
+        />
       </div>
 
-      {orderedFoods.length > 0 && (
-        <div className="w-1/4">
-          <OrderCards orderedFoods={orderedFoods} />
-        </div>
+      {isOpen && (
+        <Basket
+          orderedFoods={orderedFoods}
+          toggleSidebar={toggleSidebar}
+          updateQuantity={updateQuantity}
+          removeItem={removeItem}
+          isOpen={isOpen}
+          setOrderedFoods={setOrderedFoods} // 🆕 props дамжуулах
+          setOrderStatus={setOrderStatus}   // 🆕 props дамжуулах
+        />
       )}
+      <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />
     </div>
   );
-
 }

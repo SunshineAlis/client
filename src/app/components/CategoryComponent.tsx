@@ -126,7 +126,7 @@ const CategoryComponent: React.FC<CategoryProps> = ({
   };
 
   return (
-    <div className="p-4 bg-gray-100 max-w-[850px] w-full m-auto rounded-lg">
+    <div className="p-4 bg-gray-100 max-w-[1000px] w-full m-auto rounded-lg">
       <h3 className="text-lg font-semibold mb-2">Dishes Category</h3>
       <div className="flex flex-wrap gap-3 items-center">
         <p className="px-3 py-1 rounded-lg cursor-pointer bg-gray-200 hover:bg-gray-300 transition">
