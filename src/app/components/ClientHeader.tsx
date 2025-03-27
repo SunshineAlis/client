@@ -3,20 +3,26 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import { SlBasket } from "react-icons/sl";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoPersonOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 type HeaderProps = {
   toggleSidebar: () => void;
   orderedFoodsCount: number;
 };
 
-const ClientHeader: React.FC<HeaderProps> = ({ toggleSidebar, orderedFoodsCount }) => {
+const ClientHeader: React.FC<HeaderProps> = ({
+  toggleSidebar,
+  orderedFoodsCount,
+}) => {
+  const router = useRouter();
   return (
     <header className="bg-black shadow-md p-4 flex justify-around items-center ">
       <div className="flex items-center justify-start ml-4">
-        <img src="foodDeliver.webp"
-          className="w-[8%] rounded" />
+        <img src="foodDeliver.webp" className="w-[8%] rounded" />
         <div>
-          <h1 className="ml-2 text-xl font-bold text-white  italic">Nom<span className="text-red-500">Nom</span></h1>
+          <h1 className="ml-2 text-xl font-bold text-white  italic">
+            Nom<span className="text-red-500">Nom</span>
+          </h1>
           <p className="text-white ml-2">Swift Delivery</p>
         </div>
       </div>
@@ -33,8 +39,10 @@ const ClientHeader: React.FC<HeaderProps> = ({ toggleSidebar, orderedFoodsCount 
         <IoIosArrowForward className="text-gray-500 text-xl ml-2" />
       </div>
 
-
-      <button onClick={toggleSidebar} className="relative bg-gray-200 p-2 m-2 rounded-2xl cursor-pointer">
+      <button
+        onClick={toggleSidebar}
+        className="relative bg-gray-200 p-2 m-2 rounded-2xl cursor-pointer"
+      >
         <SlBasket className="text-2xl" />
         {orderedFoodsCount > 0 && (
           <span className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
@@ -43,9 +51,12 @@ const ClientHeader: React.FC<HeaderProps> = ({ toggleSidebar, orderedFoodsCount 
         )}
       </button>
       <div className="bg-red-500 rounded-full h-10 p-3 flex items-center justify-center cursor-pointer">
-        <IoPersonOutline className="text-white text-2xl" />
+        <IoPersonOutline
+          className="text-white text-2xl"
+          onClick={() => router.push("/sign-up")}
+        />
       </div>
-    </header >
+    </header>
   );
 };
 

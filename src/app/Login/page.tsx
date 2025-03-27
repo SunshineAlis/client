@@ -27,27 +27,19 @@ export default function Login() {
         password: password,
       });
       console.log(response);
-      // if (email===response.data.email)
-    } catch (error) { }
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      console.log("token", response.data.token);
+      alert("Login successful");
+      router.push("/sign-up");
+    } catch (error) {}
     if (password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
     }
-
-    // app.post("/login", async (req, res) => {
-    //   const { username, password } = req.body;
-    //   const user = await findUserByUsername(username);
-
-    //   if (!user || !(await verifyPassword(password, user.password))) {
-    //     return res.status(401).json({ message: "Invalid credentials" });
-    //   }
-
-    //   const token = generateToken(user);
-    //   res.json({ token });
-    // });
   };
   return (
-    <div className="max-w-[1200px] w-[100%] m-auto">
+    <div className="max-w-[1200px] w-[100%] m-auto flex items-center my-40">
       {/* input  */}
       <div className="w-[50%] my-10 px-2 py-10 mx-6  bg-white shadow-md rounded-lg">
         <div className="w-[80%] m-auto flex flex-col gap-2 py-10">
@@ -63,31 +55,41 @@ export default function Login() {
           <input
             className="border-2 px-4 py-3 rounded-lg my-4"
             placeholder="Enter your email address"
+            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="border-2 px-4 py-3 rounded-lg "
             placeholder="Enter your email address"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <div className="flex items-center space-x-2 ml-2 my-4">
-            <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              onClick={() => router.push("/forgotPassword")}>
+            <p
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              onClick={() => router.push("/forgotPassword")}
+            >
               Forgot password ?
             </p>
           </div>
-          <Button className="w-full text-white bg-blue-600 hover:bg-blue-900 py-3 rounded-lg">
+          <Button
+            onClick={handleSubmit}
+            className="w-full text-white bg-blue-600 hover:bg-blue-900 py-3 rounded-lg"
+          >
             Let's go
           </Button>
           <p className="text-center text-gray-600">
             Don't have an account ?
-            <span className="text-blue-500 ml-2 cursor-pointer hover:text-blue-900"
-              onClick={() => router.push("/Email")}> Sign Up </span>
+            <span
+              className="text-blue-500 ml-2 cursor-pointer hover:text-blue-900"
+              onClick={() => router.push("/sign-up")}
+            >
+              Sign Up
+            </span>
           </p>
         </div>
-
       </div>
       <div className="w-[50%]">
-        <p></p>
+        <img src="foodDeliver.webp" />
       </div>
-    </div >
+    </div>
   );
 }

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import FoodCard from "./FoodCart";
-import OrderList from "@/OrderCompenent/OrderListModal";
+import OrderList from "@/OrderComponent/OrderListModal";
 import Header from "./ClientHeader";
 import Basket from "../components/basket";
 import FoodCategory from "./FoodCategory";
-import OrderStatus from "@/OrderCompenent/OrderStatus";
+import OrderStatus from "@/OrderComponent/OrderStatus";
 import SubmitOrder from "../components/SubmitOrder";
 
 type Food = {
@@ -36,8 +36,12 @@ type Order = {
 };
 
 export default function FoodClient() {
-  const [categoriesWithFoods, setCategoriesWithFoods] = useState<Category[]>([]);
-  const [orderedFoods, setOrderedFoods] = useState<{ food: Food; quantity: number }[]>([]);
+  const [categoriesWithFoods, setCategoriesWithFoods] = useState<Category[]>(
+    []
+  );
+  const [orderedFoods, setOrderedFoods] = useState<
+    { food: Food; quantity: number }[]
+  >([]);
   const [isOpen, setIsOpen] = useState(false);
   const [orderStatus, setOrderStatus] = useState<"" | "success" | "error">("");
 
@@ -60,7 +64,10 @@ export default function FoodClient() {
               );
               return { ...category, foods: data.foods || [] };
             } catch (error) {
-              console.error(`Error fetching foods for ${category.categoryName}:`, error);
+              console.error(
+                `Error fetching foods for ${category.categoryName}:`,
+                error
+              );
               return { ...category, foods: [] };
             }
           })
@@ -73,7 +80,9 @@ export default function FoodClient() {
     fetchCategoriesWithFoods();
   }, []);
 
-  const allFoods = categoriesWithFoods.flatMap((category) => category.foods || []);
+  const allFoods = categoriesWithFoods.flatMap(
+    (category) => category.foods || []
+  );
 
   const addToOrder = (food: Food, quantity: number) => {
     setOrderedFoods((prev) => {
@@ -119,11 +128,12 @@ export default function FoodClient() {
     });
   };
 
-
-
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Header toggleSidebar={toggleSidebar} orderedFoodsCount={orderedFoods.length} />
+      <Header
+        toggleSidebar={toggleSidebar}
+        orderedFoodsCount={orderedFoods.length}
+      />
       <FoodCategory />
       <div className="p-4 max-w-[1000px] w-full m-auto rounded-2xl flex gap-6 relative">
         <div className="w-full">
@@ -137,10 +147,16 @@ export default function FoodClient() {
 
           {categoriesWithFoods.map((category) => (
             <div key={category._id}>
-              <h3 className="text-lg font-semibold mt-4 mb-2">{category.categoryName}</h3>
+              <h3 className="text-lg font-semibold mt-4 mb-2">
+                {category.categoryName}
+              </h3>
               <div className="grid grid-cols-4 gap-2">
                 {category.foods?.map((food) => (
-                  <FoodCard key={food._id} food={food} addToOrder={addToOrder} />
+                  <FoodCard
+                    key={food._id}
+                    food={food}
+                    addToOrder={addToOrder}
+                  />
                 ))}
               </div>
             </div>
@@ -162,7 +178,7 @@ export default function FoodClient() {
           removeItem={removeItem}
           isOpen={isOpen}
           setOrderedFoods={setOrderedFoods} // 🆕 props дамжуулах
-          setOrderStatus={setOrderStatus}   // 🆕 props дамжуулах
+          setOrderStatus={setOrderStatus} // 🆕 props дамжуулах
         />
       )}
       <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />
