@@ -29,7 +29,7 @@ export default function SignUp() {
       }
 
       return true;
-      // if(p)
+
     } catch (err: any) {
       setError(err.errors?.join("\n") || "Validation failed");
       return false;

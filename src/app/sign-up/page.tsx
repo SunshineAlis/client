@@ -11,6 +11,7 @@ const SignUp = () => {
   if (step === "email")
     return <EmailStep setStep={setStep} setUserData={setUserData} />;
   return <Password userData={userData} />;
+
 };
 
 export default SignUp;

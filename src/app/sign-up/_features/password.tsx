@@ -27,7 +27,6 @@ export const Password = ({ userData }: { userData: string }) => {
       }
 
       return true;
-      // if(p)
     } catch (err: any) {
       setError(err.errors?.join("\n") || "Validation failed");
       return false;
@@ -35,11 +34,11 @@ export const Password = ({ userData }: { userData: string }) => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return; //
+    if (!validateForm()) return;
     setError("");
-
     try {
-      const response = await axios.post("http://localhost:3030/user", {
+      console.log("Sending data to backend:", { email: userData, password });
+      const response = await axios.post("http://localhost:3030/user/signup", {
         email: userData,
         password,
       });
@@ -47,7 +46,7 @@ export const Password = ({ userData }: { userData: string }) => {
       console.log(response);
 
       if (response.status === 200) {
-        router.push("/Login");
+        router.push("/Login"); // 
       } else {
         setError(response.data.message || "Failed to save user");
       }
@@ -56,6 +55,7 @@ export const Password = ({ userData }: { userData: string }) => {
       setError(err.response?.data?.message || "Something went wrong");
     }
   };
+
 
   return (
     <div className="flex max-w-[1200px] w-[100%] m-auto">

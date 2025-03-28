@@ -19,7 +19,7 @@ export const EmailStep = ({
   setUserData: (value: string) => void;
 }) => {
   const router = useRouter();
-  const [email, setEmail] = useState<string>("");
+  const [email, setEmail] = useState<string>(""); //
   const [error, setError] = useState("");
 
   const validateForm = () => {
@@ -34,25 +34,23 @@ export const EmailStep = ({
   const handleClick = async () => {
     if (!validateForm()) return;
     setError("");
+
+
+    setUserData(email);
+
     try {
       const response = await axios.post("http://localhost:3030/user", {
         email: email,
       });
-      setStep("password");
-      console.log(response);
+
       if (response.status === 200) {
-        setUserData(email);
+        setStep("password");  // Move to the password step if successful
       } else {
         setError(response.data.message || "Failed to save user");
       }
     } catch (err: any) {
       console.error("Server Error:", err);
-
-      if (err.response) {
-        setError(err.response.data.message || "Something went wrong");
-      } else {
-        setError("Error connecting to server. Please try again later.");
-      }
+      setError(err.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -81,8 +79,7 @@ export const EmailStep = ({
               type="email"
               placeholder="Enter your email address"
               value={email}
-              formNoValidate
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}  // Bind input to email state
             />
 
             <Button
@@ -107,7 +104,7 @@ export const EmailStep = ({
           </div>
         </div>
       </div>
-      <div className="w-[50%]"></div>
     </div>
   );
 };
+

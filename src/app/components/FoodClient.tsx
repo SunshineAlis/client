@@ -177,8 +177,8 @@ export default function FoodClient() {
           updateQuantity={updateQuantity}
           removeItem={removeItem}
           isOpen={isOpen}
-          setOrderedFoods={setOrderedFoods} // 🆕 props дамжуулах
-          setOrderStatus={setOrderStatus} // 🆕 props дамжуулах
+          setOrderedFoods={setOrderedFoods}
+          setOrderStatus={setOrderStatus}
         />
       )}
       <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />
