@@ -14,7 +14,7 @@ const OrderStatus: React.FC<orderStatusProps> = ({ status, onClose }) => {
                 {status === "success" ? (
                     <p className="text-green-500 font-bold">Order Created Successfully! ✅</p>
                 ) : (
-                    <p className="text-red-500 font-bold">Error creating order. ❌</p>
+                    <p className="text-red-500 font-bold">Error creating order. </p>
                 )}
                 <button onClick={onClose} className="mt-4 bg-gray-300 px-4 py-2 rounded-md">
                     Close

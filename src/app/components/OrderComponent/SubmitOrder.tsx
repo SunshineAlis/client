@@ -1,32 +1,20 @@
+"use client";
 import axios from "axios";
 import { useState } from "react";
-
-type Food = {
-  _id: string;
-  foodName: string;
-  price: number;
-  categoryId?: string;
-};
-
-type OrderedFood = {
-  food: Food;
-  quantity: number;
-};
-
-type SubmitOrderProps = {
-  orderedFoods: OrderedFood[];
-  setOrderedFoods: (foods: OrderedFood[]) => void;
-  setOrderStatus: (status: "" | "success" | "error") => void;
-};
-
+import { useUser } from "@/provider/UserProvider";
 export default function SubmitOrder({
   orderedFoods,
   setOrderedFoods,
   setOrderStatus,
 }: SubmitOrderProps) {
+  const { isConfirmed } = useUser();
   const [loading, setLoading] = useState(false);
 
   const submitFoodOrder = async () => {
+    if (!isConfirmed) {
+      alert("⚠️ Please confirm address!");
+      return;
+    }
     try {
       setLoading(true);
       const orderData = {
@@ -35,8 +23,6 @@ export default function SubmitOrder({
           0
         ),
       };
-      console.log("📦 Final order data:", orderData);
-
       const response = await axios.post(
         "http://localhost:3030/order",
         orderData
@@ -59,7 +45,6 @@ export default function SubmitOrder({
       setLoading(false);
     }
   };
-
   return (
     <button
       onClick={submitFoodOrder}

@@ -13,5 +13,4 @@ const SignUp = () => {
   return <Password userData={userData} />;
 
 };
-
 export default SignUp;

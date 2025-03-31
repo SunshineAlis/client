@@ -1,5 +1,4 @@
 
-
 const QuantityControl: React.FC<{
     quantity: number;
     onQuantityChange: (newQuantity: number) => void;

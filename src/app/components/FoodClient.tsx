@@ -1,39 +1,13 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import axios from "axios";
 import FoodCard from "./FoodCart";
-import OrderList from "@/OrderComponent/OrderListModal";
-import Header from "./ClientHeader";
-import Basket from "../components/basket";
+import Header from "./HeaderComponents/ClientHeader";
+import Basket from "./HeaderComponents/basket";
 import FoodCategory from "./FoodCategory";
-import OrderStatus from "@/OrderComponent/OrderStatus";
-import SubmitOrder from "../components/SubmitOrder";
-
-type Food = {
-  _id: string;
-  foodName: string;
-  price: number;
-  ingredients: string;
-  image?: string | null | File;
-  categoryId?: string;
-  imageUrl?: string;
-};
-
-type Category = {
-  _id: string;
-  categoryName: string;
-  foods?: Food[];
-};
-
-type OrderItem = {
-  food: string; // Or `Food` if you want to store the whole object
-  quantity: number;
-};
-
-type Order = {
-  totalPrice: number;
-  foodOrderItems: OrderItem[];
-};
+import OrderStatus from "../components/OrderComponent/OrderStatus";
+import { useUser } from "../components/provider/UserProvider";
+import { useRouter } from "next/navigation";
 
 export default function FoodClient() {
   const [categoriesWithFoods, setCategoriesWithFoods] = useState<Category[]>(
@@ -44,18 +18,17 @@ export default function FoodClient() {
   >([]);
   const [isOpen, setIsOpen] = useState(false);
   const [orderStatus, setOrderStatus] = useState<"" | "success" | "error">("");
-
+  const { isAuthenticated } = useUser();
+  const router = useRouter();
   useEffect(() => {
     const savedOrder = localStorage.getItem("orderedFoods");
     if (savedOrder) {
       setOrderedFoods(JSON.parse(savedOrder));
     }
-
     const fetchCategoriesWithFoods = async () => {
       try {
         const { data } = await axios.get("http://localhost:3030/category");
         const categories = data.data;
-
         const categoriesData = await Promise.all(
           categories.map(async (category: Category) => {
             try {
@@ -79,12 +52,15 @@ export default function FoodClient() {
     };
     fetchCategoriesWithFoods();
   }, []);
-
   const allFoods = categoriesWithFoods.flatMap(
     (category) => category.foods || []
   );
-
   const addToOrder = (food: Food, quantity: number) => {
+    if (!isAuthenticated) {
+      alert("Please sign-up or login before an order.!");
+      router.push("/Login");
+      return;
+    }
     setOrderedFoods((prev) => {
       const existingOrder = prev.find((item) => item.food._id === food._id);
       let updatedOrders;
@@ -98,18 +74,14 @@ export default function FoodClient() {
       } else {
         updatedOrders = [...prev, { food, quantity }];
       }
-
       localStorage.setItem("orderedFoods", JSON.stringify(updatedOrders));
       return updatedOrders;
     });
-
     setIsOpen(true);
   };
-
   const toggleSidebar = () => {
     setIsOpen((prev) => !prev);
   };
-
   const updateQuantity = (foodId: string, newQuantity: number) => {
     setOrderedFoods((prev) => {
       const updatedOrders = prev.map((item) =>
@@ -119,7 +91,6 @@ export default function FoodClient() {
       return updatedOrders;
     });
   };
-
   const removeItem = (index: number) => {
     setOrderedFoods((prev) => {
       const updatedOrders = prev.filter((_, idx) => idx !== index);
@@ -127,7 +98,6 @@ export default function FoodClient() {
       return updatedOrders;
     });
   };
-
   return (
     <div className="bg-gray-100 min-h-screen">
       <Header
@@ -144,7 +114,6 @@ export default function FoodClient() {
               <FoodCard key={food._id} food={food} addToOrder={addToOrder} />
             ))}
           </div>
-
           {categoriesWithFoods.map((category) => (
             <div key={category._id}>
               <h3 className="text-lg font-semibold mt-4 mb-2">
@@ -162,12 +131,6 @@ export default function FoodClient() {
             </div>
           ))}
         </div>
-        <OrderList
-          orderedFoods={orderedFoods}
-          setOrderedFoods={setOrderedFoods}
-          isOpen={isOpen}
-          toggleSidebar={toggleSidebar}
-        />
       </div>
 
       {isOpen && (

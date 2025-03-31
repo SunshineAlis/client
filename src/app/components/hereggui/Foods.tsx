@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PenIcon } from "lucide-react";
-import { AddFood } from "../addFood";
+import { AddFood } from "./addFood";
 import { EditFood } from "../EditFood";
 import { useRouter } from "next/navigation";
 

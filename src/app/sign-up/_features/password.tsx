@@ -1,13 +1,10 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
-import { User } from "@/type";
-
 export const Password = ({ userData }: { userData: string }) => {
   const router = useRouter();
   const [password, setPassword] = useState<string>("");
@@ -45,8 +42,8 @@ export const Password = ({ userData }: { userData: string }) => {
 
       console.log(response);
 
-      if (response.status === 200) {
-        router.push("/Login"); // 
+      if (response.status === 201) {
+        router.push("/Login");
       } else {
         setError(response.data.message || "Failed to save user");
       }
@@ -61,7 +58,7 @@ export const Password = ({ userData }: { userData: string }) => {
     <div className="flex max-w-[1200px] w-[100%] m-auto">
       <div className="w-[50%] mx-auto   bg-white shadow-md rounded-lg">
         <div className="w-[60%] m-auto px-4 py-10 my-2">
-          <Button size="icon" className="mb-4" onClick={() => router.back()}>
+          <Button size="icon" className="mb-4" onClick={() => router.push("/")}>
             <ChevronLeft />
           </Button>
           <h1 className="text-2xl font-bold text-center text-gray-900">
@@ -110,9 +107,6 @@ export const Password = ({ userData }: { userData: string }) => {
           </div>
         </div>
       </div>
-      {/* <div className="w-[50%]">
-        <Login />
-      </div> */}
     </div>
   );
 };

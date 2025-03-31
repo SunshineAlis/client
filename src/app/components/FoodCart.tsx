@@ -1,21 +1,6 @@
+"use-client"
 import React, { useState } from "react";
-import AddToCardsModal from "../../OrderComponent/AddToCards";
-
-type Food = {
-  _id: string;
-  foodName: string;
-  price: number;
-  ingredients: string;
-  image?: string | null | File;
-  categoryId?: string;
-  imageUrl?: string;
-};
-
-type FoodProps = {
-  food: Food;
-  addToOrder: (food: Food, quantity: number) => void;
-};
-
+import AddToCardsModal from "./OrderComponent/AddToCards";
 const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 

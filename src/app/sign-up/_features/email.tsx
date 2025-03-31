@@ -1,16 +1,10 @@
 "use client";
-
 import { Dispatch, SetStateAction, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
-
-type Email = {
-  Email: string;
-};
-
 export const EmailStep = ({
   setStep,
   setUserData,
@@ -44,7 +38,7 @@ export const EmailStep = ({
       });
 
       if (response.status === 200) {
-        setStep("password");  // Move to the password step if successful
+        setStep("password");
       } else {
         setError(response.data.message || "Failed to save user");
       }
@@ -62,7 +56,7 @@ export const EmailStep = ({
             variant="outline"
             size="icon"
             className="mb-4"
-            onClick={() => router.back()}
+            onClick={() => router.push("/")}
           >
             <ChevronLeft />
           </Button>
