@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@/provider/UserProvider';
+import { useUser } from '../components/provider/UserProvider';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Checkbox } from "@/components/ui/checkbox";

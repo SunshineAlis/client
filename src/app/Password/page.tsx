@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import axios from 'axios';  // Import axios
+import axios from 'axios';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react"

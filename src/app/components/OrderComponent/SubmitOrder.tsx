@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useState } from "react";
-import { useUser } from "@/provider/UserProvider";
+import { useUser } from "../provider/UserProvider";
 export default function SubmitOrder({
   orderedFoods,
   setOrderedFoods,

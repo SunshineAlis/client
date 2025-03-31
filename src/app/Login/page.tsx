@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/provider/UserProvider";
+import { useUser } from "../components/provider/UserProvider";
 import { ChevronLeft } from "lucide-react"
 
 export default function Login() {
