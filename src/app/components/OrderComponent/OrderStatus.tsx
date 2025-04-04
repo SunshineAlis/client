@@ -1,10 +1,4 @@
-"use client"
-
-type orderStatusProps = {
-    status: "success" | "error" | "";
-    onClose: () => void;
-};
-
+"use client";
 const OrderStatus: React.FC<orderStatusProps> = ({ status, onClose }) => {
     if (!status) return null;
 

@@ -19,7 +19,6 @@ const LoginMenu: React.FC<LoginMenuProps> = ({ logout, setMenuOpen }) => {
                     setMenuOpen(false);
                     router.push("/");
                 }}
-
             >
                 🚪 Logout
             </button>

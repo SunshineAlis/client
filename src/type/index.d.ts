@@ -1,4 +1,8 @@
 type Food = {
+    category: {
+        _id: string;
+        categoryName: string;
+    };
     _id: string;
     foodName: string;
     price: number;
@@ -6,11 +10,20 @@ type Food = {
     image?: string | null | File;
     categoryId?: string;
     imageUrl?: string;
+
 };
 type Category = {
     _id: string;
     categoryName: string;
     foods?: Food[];
+};
+type FoodOrderItem = {
+    food: {
+        _id: string;
+        foodName: string;
+        price: number;
+    };
+    quantity: number;
 };
 type OrderedFood = {
     food: Food;
@@ -22,13 +35,29 @@ type SubmitOrderProps = {
     setOrderStatus: (status: "" | "success" | "error") => void;
 };
 
+type User = {
+    _id: string;
+    email: string;
+    phone?: string;
+    address?: string;
+    role?: string;
+};
+type OrderFoodProps = {
+    food: Food;
 
+};
+type UserContextType = {
+    user: User | null;
+    isAuthenticated: boolean;
+    isConfirmed: boolean;
+    setUser: (user: User | null) => void;
+    setIsConfirmed: (isConfirmed: boolean) => void;
+    logout: () => void;
+    updateUser: (updatedUser: Partial<User>) => void;
+};
 type CategoryProps = {
     categories: Category[];
     foodCountByCategory: { [key: string]: number };
-    // setSelectedCategory: (id: string) => void;
-    // openAddFoodModal: (catId: string) => void;
-    // handleDelete?: (id: string) => void;
 };
 type BasketProps = {
     orderedFoods: { food: any; quantity: number }[];
@@ -49,5 +78,17 @@ type HeaderProps = {
 };
 type FoodProps = {
     food: Food;
+    addToOrder: (food: Food, quantity: number) => void;
+};
+type orderStatusProps = {
+    status: "success" | "error" | "";
+    onClose: () => void;
+};
+
+
+type AddModalProps = {
+    food: Food;
+    isOpen: boolean;
+    onClose: () => void;
     addToOrder: (food: Food, quantity: number) => void;
 };

@@ -31,11 +31,9 @@ const Settings: React.FC = () => {
             });
         }
     }, [user]);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const validateForm = () => {
         const passVal = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
         if (formData.newPassword && !passVal.test(formData.newPassword)) {
@@ -48,15 +46,12 @@ const Settings: React.FC = () => {
         }
         return true;
     };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validateForm()) return;
-
         try {
             setLoading(true);
             setError('');
-
             const updatedData = {
                 phone: formData.phone,
                 address: formData.address,
@@ -65,13 +60,11 @@ const Settings: React.FC = () => {
                     newPassword: formData.newPassword,
                 }),
             };
-
             const token = localStorage.getItem('token');
             if (!token) {
                 router.push('/login');
                 return;
             }
-
             await axios.put(
                 'http://localhost:3030/user/information',
                 updatedData,
@@ -82,17 +75,18 @@ const Settings: React.FC = () => {
                     },
                 }
             );
-
-
-            setUser({ ...user, ...updatedData });
+            if (user) {
+                setUser({ ...user, ...updatedData });
+                localStorage.setItem("user", JSON.stringify({ ...user, ...updatedData }));
+            }
             localStorage.setItem("user", JSON.stringify({ ...user, ...updatedData }));
 
-            alert('Мэдээлэл амжилттай шинэчлэгдлээ!');
+            alert('Information updated successfull!');
             setTimeout(() => {
                 router.push("/");
             }, 500);
         } catch (err: any) {
-            setError(err.response?.data?.message || "Юу нэгэн алдаа гарлаа!");
+            setError(err.response?.data?.message || "Error!");
         } finally {
             setLoading(false);
         }

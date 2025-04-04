@@ -1,98 +1,97 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-
-type UserType = {
-    email?: string;
-    role?: string;
-    phone?: string;
-    address?: string;
-};
-
-type UserContextType = {
-    user?: UserType;
-    isAuthenticated: boolean;
-    isConfirmed: boolean;
-    setIsConfirmed: (value: boolean) => void;
-    setUser: (user: UserType | null) => void;
-    logout: () => void;
-    updateUser: (updatedUser: UserType) => void;
-};
-
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
-    const [isConfirmed, setIsConfirmed] = useState(false);
-
-    const [state, setState] = useState<Omit<UserContextType, "isConfirmed" | "setIsConfirmed">>({
-        user: undefined,
+    const [state, setState] = useState<{
+        user: User | null;
+        isAuthenticated: boolean;
+        isConfirmed: boolean;
+    }>({
+        user: null,
         isAuthenticated: false,
-        setUser: (user) => {
-            if (user) {
-                localStorage.setItem("user", JSON.stringify(user));
-                setState((prev) => ({
-                    ...prev,
-                    user,
-                    isAuthenticated: true,
-                }));
-            } else {
-                localStorage.removeItem("user");
-                localStorage.removeItem("token");
-                setState((prev) => ({
-                    ...prev,
-                    user: undefined,
-                    isAuthenticated: false,
-                }));
-            }
-        },
-        logout: () => {
-            localStorage.removeItem("user");
-            localStorage.removeItem("token");
-            setState((prev) => ({
-                ...prev,
-                user: undefined,
-                isAuthenticated: false,
-            }));
-            router.push("/login");
-        },
-        updateUser: (updatedUser: UserType) => {
-            setState((prev) => ({
-                ...prev,
-                user: updatedUser,
-            }));
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-        }
+        isConfirmed: false,
     });
 
     useEffect(() => {
-        const fetchUser = () => {
+        const token = localStorage.getItem("token");
+        const userJson = localStorage.getItem("user");
+
+        if (token && userJson) {
             try {
-                const token = localStorage.getItem("token");
-                const user = localStorage.getItem("user");
-
-                if (token && user) {
-                    setState((prev) => ({
-                        ...prev,
-                        user: JSON.parse(user),
-                        isAuthenticated: true,
-                    }));
-                } else {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                }
+                const user = JSON.parse(userJson);
+                setState({
+                    user,
+                    isAuthenticated: true,
+                    isConfirmed: localStorage.getItem("isConfirmed") === "true",
+                });
             } catch (error) {
-                console.error("User fetch error:", error);
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
+                console.error("Error:", error);
+                logout();
             }
-        };
+        }
+    }, []);
 
-        fetchUser();
+    const setUser = useCallback((user: User | null) => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+            setState(prev => ({
+                ...prev,
+                user,
+                isAuthenticated: true,
+            }));
+        } else {
+            localStorage.removeItem("user");
+            setState(prev => ({
+                ...prev,
+                user: null,
+                isAuthenticated: false,
+            }));
+        }
+    }, []);
+
+    const setIsConfirmed = useCallback((isConfirmed: boolean) => {
+        localStorage.setItem("isConfirmed", String(isConfirmed));
+        setState(prev => ({ ...prev, isConfirmed }));
+    }, []);
+
+    const logout = useCallback(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("isConfirmed");
+        setState({
+            user: null,
+            isAuthenticated: false,
+            isConfirmed: false,
+        });
+        router.push("/login");
+    }, [router]);
+
+    const updateUser = useCallback((updatedUser: Partial<User>) => {
+        setState(prev => {
+            if (!prev.user) return prev;
+
+            const newUser = { ...prev.user, ...updatedUser };
+            localStorage.setItem("user", JSON.stringify(newUser));
+            return {
+                ...prev,
+                user: newUser,
+            };
+        });
     }, []);
 
     return (
-        <UserContext.Provider value={{ ...state, isConfirmed, setIsConfirmed }}>
+        <UserContext.Provider
+            value={{
+                ...state,
+                setUser,
+                setIsConfirmed,
+                logout,
+                updateUser,
+            }}
+        >
             {children}
         </UserContext.Provider>
     );

@@ -24,7 +24,6 @@ export const EmailStep = ({
     }
     return true;
   };
-
   const handleClick = async () => {
     if (!validateForm()) return;
     setError("");
@@ -83,9 +82,7 @@ export const EmailStep = ({
             >
               Let's go
             </Button>
-
             {error && <p className="text-red-500 text-center">{error}</p>}
-
             <p className="text-center text-gray-600 mt-4">
               Already have an account?
               <span

@@ -3,7 +3,7 @@ import QuantityControl from "../OrderComponent/QuantityControl";
 import React, { useState, useEffect } from "react";
 import SubmitOrder from "../OrderComponent/SubmitOrder";
 import { useUser } from "../provider/UserProvider";
-import { ConfirmAddress } from "../OrderComponent/ConfirmAddress";
+import OrderStatus from "../OrderComponent/OrderStatus";
 import { CgClose } from "react-icons/cg";
 const Basket: React.FC<BasketProps> = ({
   orderedFoods,
@@ -12,10 +12,11 @@ const Basket: React.FC<BasketProps> = ({
   updateQuantity,
   removeItem,
   setOrderedFoods,
-  setOrderStatus,
+
 }) => {
   const { isAuthenticated } = useUser();
   const [autoOpen, setAutoOpen] = useState(false);
+  const [orderStatus, setOrderStatus] = useState<"success" | "error" | "">("");
 
   useEffect(() => {
     if (isAuthenticated && orderedFoods.length > 0) {
@@ -85,7 +86,7 @@ const Basket: React.FC<BasketProps> = ({
                 </div>
               </div>
             ))}
-            <ConfirmAddress />
+            { }
             <p className="text-right text-xl font-bold text-red-600 mt-4">
               Total: {totalPrice.toLocaleString()}₮
             </p>
@@ -104,6 +105,8 @@ const Basket: React.FC<BasketProps> = ({
               setOrderedFoods={setOrderedFoods}
               setOrderStatus={setOrderStatus}
             />
+
+            {orderStatus && <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />}
           </div>
         )}
       </div>

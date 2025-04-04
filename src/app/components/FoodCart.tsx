@@ -1,9 +1,8 @@
-"use-client"
+"use client";
 import React, { useState } from "react";
 import AddToCardsModal from "./OrderComponent/AddToCards";
 const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <div className="relative border border-gray-300 shadow-lg flex flex-col justify-center items-center rounded-xl bg-white p-4">
       {food.image && typeof food.image === "string" && (

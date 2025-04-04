@@ -17,7 +17,6 @@ export default function Login() {
     const handleSubmit = async () => {
         setError("");
         setSuccess("");
-
         if (!email || !password) {
             setError("Please fill in all fields.");
             return;
@@ -26,13 +25,11 @@ export default function Login() {
             setError("Password must be at least 8 characters.");
             return;
         }
-
         try {
             const response = await axios.post("http://localhost:3030/user/login", {
                 email,
                 password,
             });
-
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             setUser(response.data.user);
@@ -45,8 +42,6 @@ export default function Login() {
             setError(error.response?.data?.message || "Login failed. Please try again.");
         }
     };
-
-
     return (
         <div className="max-w-[1200px] w-[100%] m-auto flex items-center my-40">
             <div className="w-[50%] my-10 px-2 py-10 mx-6 bg-white shadow-md rounded-lg">

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { SlBasket } from "react-icons/sl";
@@ -8,8 +9,6 @@ import { useUser } from "../provider/UserProvider";
 import axios from "axios";
 import LoginMenu from "../HeaderComponents/LoginMenu";
 import { Logo } from "../HeaderComponents/Logo";
-
-
 const ClientHeader: React.FC<HeaderProps> = ({
   toggleSidebar,
   orderedFoodsCount,
@@ -34,7 +33,6 @@ const ClientHeader: React.FC<HeaderProps> = ({
       setError("Please enter your address.");
       return;
     }
-
     try {
       const updatedData = { address: formData.address };
       const token = localStorage.getItem("token");
@@ -50,16 +48,17 @@ const ClientHeader: React.FC<HeaderProps> = ({
         },
       });
 
-      setUser({ ...user, ...updatedData });
+      if (user) {
+        const updatedUser = { ...user, ...updatedData };
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
       localStorage.setItem("user", JSON.stringify({ ...user, ...updatedData }));
-
-      // Show success alert
       alert("Address updated successfully!");
     } catch (err: any) {
       setError(err.response?.data?.message || "Server error!");
     }
   };
-
   return (
     <header className="bg-black shadow-md p-4 flex justify-between items-center">
       <Logo />

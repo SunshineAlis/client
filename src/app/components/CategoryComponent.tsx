@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 const CategoryComponent: React.FC<CategoryProps> = ({ categories, foodCountByCategory }) => {
   const [dropdown, setDropdown] = useState<string | null>(null);
