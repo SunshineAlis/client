@@ -12,11 +12,12 @@ const Basket: React.FC<BasketProps> = ({
   updateQuantity,
   removeItem,
   setOrderedFoods,
+  orderStatus,
+  setOrderStatus,
 
 }) => {
   const { isAuthenticated } = useUser();
   const [autoOpen, setAutoOpen] = useState(false);
-  const [orderStatus, setOrderStatus] = useState<"success" | "error" | "">("");
 
   useEffect(() => {
     if (isAuthenticated && orderedFoods.length > 0) {
@@ -31,8 +32,8 @@ const Basket: React.FC<BasketProps> = ({
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[38%] bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen || autoOpen ? "translate-x-0" : "translate-x-full"
-        } flex flex-col max-h-screen overflow-y-auto`}
+      className={`fixed top-0 right-0 h-full w-full sm:w-[70%] md:w-[50%] lg:w-[38%] bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen || autoOpen ? "translate-x-0" : "translate-x-full"
+        } flex flex-col max-h-screen overflow-y-auto z-50`}
     >
       <button
         className="absolute top-2 right-3 text-gray-600 text-xl"
@@ -40,8 +41,9 @@ const Basket: React.FC<BasketProps> = ({
       >
         ✖
       </button>
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4">My Order List</h2>
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4">My Order List</h2>
+
         {orderedFoods.length === 0 ? (
           <p className="text-gray-600">Your basket is empty.</p>
         ) : (
@@ -49,35 +51,33 @@ const Basket: React.FC<BasketProps> = ({
             {orderedFoods.map((order, index) => (
               <div
                 key={order.food._id}
-                className="border p-4 mb-2 rounded-md flex justify-between items-center"
+                className="border p-3 sm:p-4 mb-3 rounded-md flex flex-col sm:flex-row sm:items-center gap-4"
               >
-                <div className="flex relative">
-                  {order.food.image && typeof order.food.image === "string" && (
-                    <img
-                      src={order.food.image}
-                      alt={order.food.foodName}
-                      className="h-25 w-[30%] object-cover rounded-lg"
+                {order.food.image && typeof order.food.image === "string" && (
+                  <img
+                    src={order.food.image}
+                    alt={order.food.foodName}
+                    className="w-full sm:w-24 h-24 object-cover rounded-md"
+                  />
+                )}
+                <div className="flex-1 relative w-full">
+                  <h3 className="text-sm sm:text-base font-bold text-red-600">{order.food.foodName}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{order.food.ingredients}</p>
+
+                  <div className="flex justify-between items-center mt-4">
+                    <QuantityControl
+                      quantity={order.quantity}
+                      onQuantityChange={(newQuantity) =>
+                        updateQuantity(order.food._id, newQuantity)
+                      }
                     />
-                  )}
-                  <div className="flex justify-between p-2 relative">
-                    <div>
-                      <h3 className="text-[12px] font-bold text-red-600">{order.food.foodName}</h3>
-                      <span className="text-sm font-normal block text-gray-600  px-2 py-1 rounded-md">
-                        {order.food.ingredients}
-                      </span>
-                      <div className="flex justify-between mt-6">
-                        <QuantityControl
-                          quantity={order.quantity}
-                          onQuantityChange={(newQuantity) =>
-                            updateQuantity(order.food._id, newQuantity)
-                          }
-                        />
-                        <p className="text-gray-700">Price: {order.food.price}₮</p>
-                      </div>
-                    </div>
+                    <p className="text-gray-700 text-sm sm:text-base">
+                      Price: {order.food.price}₮
+                    </p>
                   </div>
+
                   <button
-                    className="text-red-500 border-2 rounded-full p-2 absolute top-0 right-0"
+                    className="text-red-500 border-2 rounded-full p-1 absolute top-0 right-0"
                     onClick={() => removeItem(index)}
                     title="Remove item"
                   >
@@ -86,16 +86,18 @@ const Basket: React.FC<BasketProps> = ({
                 </div>
               </div>
             ))}
-            { }
-            <p className="text-right text-xl font-bold text-red-600 mt-4">
+
+
+            <p className="text-right text-lg sm:text-xl font-bold text-red-600 mt-4">
               Total: {totalPrice.toLocaleString()}₮
             </p>
           </div>
         )}
+
         {orderedFoods.length > 0 && (
-          <div className="flex justify-end mt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 mt-4">
             <button
-              className="bg-gray-300 px-4 py-2 rounded-md mr-2"
+              className="bg-gray-300 px-4 py-2 rounded-md"
               onClick={toggleSidebar}
             >
               Close
@@ -104,13 +106,16 @@ const Basket: React.FC<BasketProps> = ({
               orderedFoods={orderedFoods}
               setOrderedFoods={setOrderedFoods}
               setOrderStatus={setOrderStatus}
+              orderStatus={""}
             />
-
-            {orderStatus && <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />}
+            {orderStatus && (
+              <OrderStatus status={orderStatus} onClose={() => setOrderStatus("")} />
+            )}
           </div>
         )}
       </div>
     </div>
+
   );
 };
 export default Basket;

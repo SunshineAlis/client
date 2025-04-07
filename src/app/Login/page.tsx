@@ -1,10 +1,10 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useUser } from "../components/provider/UserProvider";
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft } from "lucide-react";
 
 export default function Login() {
     const router = useRouter();
@@ -13,6 +13,19 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchCover = async () => {
+            try {
+                const res = await axios.get("http://localhost:3030/img/Login");
+                setCoverUrl(res.data.url);
+            } catch (error) {
+                console.error("Failed to fetch cover image:", error);
+            }
+        };
+        fetchCover();
+    }, []);
 
     const handleSubmit = async () => {
         setError("");
@@ -42,6 +55,7 @@ export default function Login() {
             setError(error.response?.data?.message || "Login failed. Please try again.");
         }
     };
+
     return (
         <div className="max-w-[1200px] w-[100%] m-auto flex items-center my-40">
             <div className="w-[50%] my-10 px-2 py-10 mx-6 bg-white shadow-md rounded-lg">
@@ -98,7 +112,13 @@ export default function Login() {
                 </div>
             </div>
             <div className="w-[50%]">
-                <img src="foodDeliver.webp" alt="Food Delivery" />
+                <div className="w-full h-[300px] overflow-hidden rounded-md shadow-md">
+                    {coverUrl ? (
+                        <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
+                    ) : (
+                        <p className="text-center text-gray-500 mt-28">Loading image...</p>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -67,6 +67,7 @@ type BasketProps = {
     removeItem: (index: number) => void;
     setOrderedFoods: (foods: { food: any; quantity: number }[]) => void;
     setOrderStatus: (status: "" | "success" | "error") => void;
+    orderStatus
 };
 type LoginMenuProps = {
     logout: () => void;

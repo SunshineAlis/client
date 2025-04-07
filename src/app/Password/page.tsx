@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,18 @@ const DirectPasswordReset = () => {
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchCover = async () => {
+      try {
+        const res = await axios.get("http://localhost:3030/img/forgotPassword");
+        setCoverUrl(res.data.url);
+      } catch (error) {
+        console.error("Failed to fetch cover image:", error);
+      }
+    };
+    fetchCover();
+  }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -81,8 +93,14 @@ const DirectPasswordReset = () => {
           )}
         </div>
       </div>
-      <div className="w-full md:w-[50%]">
-        <img src="foodDeliver.webp" alt="Food Delivery" className="w-full h-auto object-cover rounded-lg" />
+      <div className="w-[50%]">
+        <div className="w-full h-[300px] overflow-hidden rounded-md shadow-md">
+          {coverUrl ? (
+            <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
+          ) : (
+            <p className="text-center text-gray-500 mt-28">Loading image...</p>
+          )}
+        </div>
       </div>
     </div>
   );

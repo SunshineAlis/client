@@ -1,17 +1,19 @@
 "use client"
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../provider/UserProvider";
 import { Checkbox } from "@/components/ui/checkbox";
 export default function SubmitOrder({
   orderedFoods,
   setOrderedFoods,
-  setOrderStatus, //
+  setOrderStatus,
+  orderStatus,
 }: {
   orderedFoods: FoodOrderItem[];
   setOrderedFoods: (foods: FoodOrderItem[]) => void;
   setOrderStatus: (status: "success" | "error" | "") => void;
+  orderStatus: "success" | "error" | "";
 }) {
   const router = useRouter();
   const { user, setUser } = useUser();
@@ -85,64 +87,82 @@ export default function SubmitOrder({
       setLoading(false);
     }
   };
+  useEffect(() => {
+    if (orderStatus === "success") {
+      const timer = setTimeout(() => {
+        router.push("/");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [orderStatus]);
   return (
     <div className="space-y-4 p-4 bg-white rounded-lg shadow">
       <h2 className="text-xl font-bold mb-4">Order Confirmation</h2>
-      <div className="space-y-3">
-        <h3 className="font-semibold">Contact info</h3>
-        <label htmlFor="email" className="text-gray-600 ml-2">
-          Email
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={contactInfo.email}
-          onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
-          placeholder="email *"
-          className="w-full p-2 border rounded"
-          required
-        />
-        <label htmlFor="phone" className="text-gray-600 ml-2">
-          Phone Number
-        </label>
-        <input
-          id="phone"
-          type="tel"
-          value={contactInfo.phone}
-          onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
-          placeholder="Phone number *"
-          className="w-full p-2 border rounded"
-          required
-        />
-        <label htmlFor="address" className="text-gray-600 ml-2 pt-2">
-          Delivery Address
-        </label>
-        <textarea
-          id="address"
-          value={contactInfo.address}
-          onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
-          placeholder="Delivery Address *"
-          className="w-full p-2 border rounded"
-          rows={3}
-          required
-        />
-      </div>
-      <Checkbox
-        id="confirm-checkbox"
-        checked={isConfirmed}
-        onCheckedChange={(checked) => setIsConfirmed(!!checked)}
-      />
-      <label htmlFor="confirm-checkbox" className="text-gray-600 ml-2">
-        Information confirmed.
-      </label>
+      {orderStatus === "success" && (
+        <div className="p-4 bg-green-100 text-green-800 rounded-md">
+          Order placed successfully!
+        </div>
+      )}
+      {orderStatus !== "success" && (
+        <>
+          <div className="space-y-3">
+            <h3 className="font-semibold">Contact info</h3>
+            <label htmlFor="email" className="text-gray-600 ml-2">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={contactInfo.email}
+              onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
+              placeholder="email *"
+              className="w-full p-2 border rounded"
+              required
+            />
+            <label htmlFor="phone" className="text-gray-600 ml-2">
+              Phone Number
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              value={contactInfo.phone}
+              onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
+              placeholder="Phone number *"
+              className="w-full p-2 border rounded"
+              required
+            />
+            <label htmlFor="address" className="text-gray-600 ml-2 pt-2">
+              Delivery Address
+            </label>
+            <textarea
+              id="address"
+              value={contactInfo.address}
+              onChange={(e) => setContactInfo({ ...contactInfo, address: e.target.value })}
+              placeholder="Delivery Address *"
+              className="w-full p-2 border rounded"
+              rows={3}
+              required
+            />
+          </div>
+          <Checkbox
+            id="confirm-checkbox"
+            checked={isConfirmed}
+            onCheckedChange={(checked) => setIsConfirmed(!!checked)}
+          />
+          <label htmlFor="confirm-checkbox" className="text-gray-600 ml-2">
+            Information confirmed.
+          </label>
 
-      <button
-        onClick={submitFoodOrder}
-        disabled={loading || !isConfirmed}
-        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-      >
-        {loading ? "Sending..." : "Submit Order"}
-      </button>
+          <button
+            onClick={submitFoodOrder}
+            disabled={loading || !isConfirmed}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+          >
+            {loading ? "Sending..." : "Submit Order"}
+          </button>
+        </>
+      )}
     </div>
   );
+
 }

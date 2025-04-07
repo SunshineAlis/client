@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,7 +11,19 @@ export const Password = ({ userData }: { userData: string }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchCover = async () => {
+      try {
+        const res = await axios.get("http://localhost:3030/img/Password");
+        setCoverUrl(res.data.url);
+      } catch (error) {
+        console.error("Failed to fetch cover image:", error);
+      }
+    };
 
+    fetchCover();
+  }, []);
   const validateForm = () => {
     try {
       const passVal = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
@@ -106,6 +118,13 @@ export const Password = ({ userData }: { userData: string }) => {
             {error && <p className="text-red-500 text-center">{error}</p>}
           </div>
         </div>
+      </div>
+      <div className="w-full h-[300px] overflow-hidden rounded-md shadow-md">
+        {coverUrl ? (
+          <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
+        ) : (
+          <p className="text-center text-gray-500 mt-28">Loading image...</p>
+        )}
       </div>
     </div>
   );
