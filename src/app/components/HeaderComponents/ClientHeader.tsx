@@ -60,64 +60,69 @@ const ClientHeader: React.FC<HeaderProps> = ({
     }
   };
   return (
-    <header className="bg-black shadow-md p-4 flex justify-between items-center">
-      <Logo />
-      <div className="relative flex items-center bg-white w-[50%] h-10 rounded-2xl px-4 shadow-md border border-gray-200">
-        <MdOutlineLocationOn className="text-red-500 text-xl" />
-        <p className="text-l text-red-500 font-medium">Delivery location</p>
-        <input
-          type="text"
-          placeholder="Add Location"
-          className="ml-3 w-[34%] bg-transparent outline-none text-gray-700 placeholder-gray-400"
-          value={formData.address || ""}
-          onChange={handleChange}
-          name="address"
-        />
-        <IoIosArrowForward
-          className="text-gray-500 text-xl ml-2 cursor-pointer"
-          onClick={confirmAddress}
-        />
-      </div>
-
-      {error && <div className="text-red-500 mt-2">{error}</div>}
-
-      <button
-        onClick={toggleSidebar}
-        className="relative bg-gray-200 p-2 mx-2 rounded-2xl cursor-pointer"
-      >
-        <SlBasket className="text-2xl" />
-        {orderedFoodsCount > 0 && (
-          <span className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-            {orderedFoodsCount}
-          </span>
-        )}
-      </button>
-
-      <div className="relative mr-[120px]">
-        {isAuthenticated ? (
+    <header className="bg-black shadow-md p-4 w-full">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <Logo />
+        <div className="flex flex-col sm:flex-row items-center w-full md:w-auto gap-4 pr-10">
+          <div className="relative flex items-center bg-white h-10 w-full sm:w-[280px] rounded-full px-4 shadow-md border border-gray-200">
+            <MdOutlineLocationOn className="text-red-500 text-xl" />
+            <p className="text-sm text-red-500 font-medium ml-2 whitespace-nowrap">
+              Delivery
+            </p>
+            <input
+              type="text"
+              placeholder="Location"
+              className="ml-3 w-full sm:w-[120px] bg-transparent outline-none text-gray-700 placeholder-gray-400"
+              value={formData.address || ""}
+              onChange={handleChange}
+              name="address"
+            />
+            <IoIosArrowForward
+              className="text-gray-500 text-xl ml-2 cursor-pointer hover:text-red-500 transition"
+              onClick={confirmAddress}
+            />
+          </div>
+          <button
+            onClick={toggleSidebar}
+            className="relative bg-white p-2 rounded-full shadow-md border hover:bg-gray-100 transition"
+          >
+            <SlBasket className="text-black text-xl" />
+            {orderedFoodsCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                {orderedFoodsCount}
+              </span>
+            )}
+          </button>
           <div className="relative">
-            <button
-              className="bg-red-500 rounded-full h-10 w-10 flex items-center justify-center cursor-pointer"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <IoPersonOutline className="text-white text-2xl" />
-            </button>
-
-            {menuOpen && (
-              <LoginMenu
-                logout={logout}
-                setMenuOpen={setMenuOpen}
+            {isAuthenticated ? (
+              <>
+                <button
+                  className="bg-red-500 rounded-full h-10 w-10 flex items-center justify-center cursor-pointer hover:bg-red-600 transition"
+                  onClick={() => setMenuOpen(!menuOpen)}
+                >
+                  <IoPersonOutline className="text-white text-2xl" />
+                </button>
+                {menuOpen && (
+                  <LoginMenu logout={logout} setMenuOpen={setMenuOpen} />
+                )}
+              </>
+            ) : (
+              <IoPersonOutline
+                className="text-white text-2xl cursor-pointer"
+                onClick={() => router.push("/sign-up")}
               />
             )}
           </div>
-        ) : (
-          <IoPersonOutline
-            className="text-white text-2xl cursor-pointer"
-            onClick={() => router.push("/sign-up")}
-          />
-        )}
+        </div>
       </div>
+      {error && (
+        <div className="text-center mt-2 text-sm text-red-500 font-medium">
+          {error}
+        </div>
+      )}
     </header>
+
+
   );
 };
 
