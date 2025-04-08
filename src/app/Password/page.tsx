@@ -11,6 +11,8 @@ const DirectPasswordReset = () => {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+
   const router = useRouter();
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -94,7 +96,7 @@ const DirectPasswordReset = () => {
         </div>
       </div>
       <div className="w-[50%]">
-        <div className="w-full h-[300px] overflow-hidden rounded-md shadow-md">
+        <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
           {coverUrl ? (
             <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
           ) : (

@@ -20,26 +20,14 @@ export const EmailStep = ({
   useEffect(() => {
     const fetchCover = async () => {
       try {
-        const response = await axios.get('http://localhost:3030/img', {
-          params: { page: 'sign-up' },
-          responseType: 'blob'
-        });
-
-        const imageUrl = URL.createObjectURL(response.data);
-        setCoverUrl(imageUrl);
-
+        const res = await axios.get("http://localhost:3030/img/Password");
+        setCoverUrl(res.data.url);
       } catch (error) {
-        console.error('Error fetching cover image:', error);
+        console.error("Failed to fetch cover image:", error);
       }
     };
 
     fetchCover();
-
-    return () => {
-      if (coverUrl) {
-        URL.revokeObjectURL(coverUrl);
-      }
-    };
   }, []);
 
   const validateForm = () => {
@@ -74,10 +62,10 @@ export const EmailStep = ({
   };
 
   return (
-    <div className="flex max-w-[1200px] w-[100%] m-auto min-h-screen">
-
-      <div className="w-[50%] mx-auto my-auto p-8 bg-white shadow-md rounded-lg">
-        <div className="w-[70%] m-auto">
+    <div className="flex flex-col md:flex-row min-h-screen w-full">
+      {/* Left side - Form */}
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-white px-6 py-12">
+        <div className="max-w-md w-full space-y-6">
           <Button
             variant="outline"
             size="icon"
@@ -86,14 +74,10 @@ export const EmailStep = ({
           >
             <ChevronLeft />
           </Button>
-          <h1 className="text-2xl font-bold text-center text-gray-900">
-            Create your account
-          </h1>
-          <p className="mt-2 text-center text-gray-600">
-            Sign up to explore your favorite dishes
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 text-center">Create your account</h1>
+          <p className="text-center text-gray-600">Sign up to explore your favorite dishes</p>
 
-          <div className="mt-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <input
               className="border px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="email"
@@ -104,16 +88,18 @@ export const EmailStep = ({
 
             <Button
               type="submit"
-              className="w-full text-white bg-blue-600 hover:bg-blue-900 py-3 rounded-lg"
+              className="w-full text-white bg-blue-600 hover:bg-blue-800 py-3 rounded-lg"
               onClick={handleClick}
             >
               Let's go
             </Button>
+
             {error && <p className="text-red-500 text-center">{error}</p>}
+
             <p className="text-center text-gray-600 mt-4">
               Already have an account?
               <span
-                className="text-blue-500 ml-2 cursor-pointer"
+                className="text-blue-500 ml-2 cursor-pointer hover:underline"
                 onClick={() => router.push("/Login")}
               >
                 Log in
@@ -122,18 +108,15 @@ export const EmailStep = ({
           </div>
         </div>
       </div>
-      <div className="w-[50%] relative">
-        {coverUrl ? (
-          <img
-            src={coverUrl}
-            alt="Cover"
-            className="w-full h-full object-cover absolute inset-0"
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <p className="text-gray-500">Loading image...</p>
-          </div>
-        )}
+
+      <div className="w-[50%]">
+        <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+          {coverUrl ? (
+            <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
+          ) : (
+            <p className="text-center text-gray-500 mt-28">Loading image...</p>
+          )}
+        </div>
       </div>
     </div>
   );
