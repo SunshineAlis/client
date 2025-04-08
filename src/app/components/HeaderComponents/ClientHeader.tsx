@@ -9,10 +9,13 @@ import { useUser } from "../provider/UserProvider";
 import axios from "axios";
 import LoginMenu from "../HeaderComponents/LoginMenu";
 import { Logo } from "../HeaderComponents/Logo";
-const ClientHeader: React.FC<HeaderProps> = ({
-  toggleSidebar,
-  orderedFoodsCount,
-}) => {
+import { useOrderSidebar } from "../provider/OrderSideBar";
+
+interface HeaderProps {
+  orderedFoodsCount: number;
+}
+
+const ClientHeader: React.FC<HeaderProps> = ({ orderedFoodsCount }) => {
   const router = useRouter();
   const { isAuthenticated, logout, user, setUser } = useUser();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,6 +23,7 @@ const ClientHeader: React.FC<HeaderProps> = ({
     address: user?.address || "",
   });
   const [error, setError] = useState("");
+  const { toggleSidebar } = useOrderSidebar();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -59,11 +63,12 @@ const ClientHeader: React.FC<HeaderProps> = ({
       setError(err.response?.data?.message || "Server error!");
     }
   };
+
   return (
     <header className="bg-black shadow-md p-4 w-full">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <Logo />
-        <div className="flex flex-col sm:flex-row items-center w-full md:w-auto gap-4 pr-10">
+        <div className="flex flex-col sm:flex-row items-center w-full md:w-auto gap-4 pr-1">
           <div className="relative flex items-center bg-white h-10 w-full sm:w-[280px] rounded-full px-4 shadow-md border border-gray-200">
             <MdOutlineLocationOn className="text-red-500 text-xl" />
             <p className="text-sm text-red-500 font-medium ml-2 whitespace-nowrap">
@@ -82,8 +87,9 @@ const ClientHeader: React.FC<HeaderProps> = ({
               onClick={confirmAddress}
             />
           </div>
+
           <button
-            onClick={toggleSidebar}
+            onClick={() => toggleSidebar("basket")}
             className="relative bg-white p-2 rounded-full shadow-md border hover:bg-gray-100 transition"
           >
             <SlBasket className="text-black text-xl" />
@@ -93,6 +99,7 @@ const ClientHeader: React.FC<HeaderProps> = ({
               </span>
             )}
           </button>
+
           <div className="relative">
             {isAuthenticated ? (
               <>
@@ -121,8 +128,6 @@ const ClientHeader: React.FC<HeaderProps> = ({
         </div>
       )}
     </header>
-
-
   );
 };
 

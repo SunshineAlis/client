@@ -5,7 +5,9 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft } from "lucide-react";
+
+
 const Settings: React.FC = () => {
     const { user, setUser } = useUser();
     const router = useRouter();

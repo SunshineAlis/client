@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import AddToCardsModal from "./OrderComponent/AddToCards";
-const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
+
+const FoodCard: React.FC<FoodProps> = ({ food, addToOrder, quantity = 0 }: FoodProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="relative border border-gray-300 shadow-lg flex flex-col justify-center items-center rounded-xl bg-white p-4">
@@ -16,7 +17,7 @@ const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
         className="absolute top-[30%] right-[10%] w-10 h-10 rounded-full bg-white text-2xl text-black font-semibold transition-colors hover:bg-red-600"
         onClick={() => setIsModalOpen(true)}
       >
-        +
+
       </button>
 
       <div className="flex justify-between items-center mt-3 w-full px-2">
@@ -42,3 +43,4 @@ const FoodCard: React.FC<FoodProps> = ({ food, addToOrder }) => {
 };
 
 export default FoodCard;
+

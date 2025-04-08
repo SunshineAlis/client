@@ -31,10 +31,7 @@ const Basket: React.FC<BasketProps> = ({
   );
 
   return (
-    <div
-      className={`fixed top-0 right-0 h-full w-full sm:w-[70%] md:w-[50%] lg:w-[38%] bg-white shadow-lg transition-transform duration-300 ease-in-out ${isOpen || autoOpen ? "translate-x-0" : "translate-x-full"
-        } flex flex-col max-h-screen overflow-y-auto z-50`}
-    >
+    <div>
       <button
         className="absolute top-2 right-3 text-gray-600 text-xl"
         onClick={toggleSidebar}
@@ -43,7 +40,6 @@ const Basket: React.FC<BasketProps> = ({
       </button>
       <div className="p-4 sm:p-6">
         <h2 className="text-xl sm:text-2xl font-bold mb-4">My Order List</h2>
-
         {orderedFoods.length === 0 ? (
           <p className="text-gray-600">Your basket is empty.</p>
         ) : (

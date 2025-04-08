@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
@@ -9,10 +10,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         user: User | null;
         isAuthenticated: boolean;
         isConfirmed: boolean;
+        token: string | null;
+        email: string | null; // Имэйл хадгалах талбар
     }>({
         user: null,
         isAuthenticated: false,
         isConfirmed: false,
+        token: null,
+        email: null, // Эхэндээ email null байна
     });
 
     useEffect(() => {
@@ -26,6 +31,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     user,
                     isAuthenticated: true,
                     isConfirmed: localStorage.getItem("isConfirmed") === "true",
+                    token,
+                    email: user.email || null, // Имэйл устгах эсвэл авах
                 });
             } catch (error) {
                 console.error("Error:", error);
@@ -41,6 +48,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 ...prev,
                 user,
                 isAuthenticated: true,
+                email: user.email, // Имэйл хадгалах
             }));
         } else {
             localStorage.removeItem("user");
@@ -48,6 +56,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 ...prev,
                 user: null,
                 isAuthenticated: false,
+                email: null, // Имэйлийг устгах
             }));
         }
     }, []);
@@ -65,6 +74,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             user: null,
             isAuthenticated: false,
             isConfirmed: false,
+            token: null,
+            email: null, // Имэйлийг ч устгах
         });
         router.push("/login");
     }, [router]);
@@ -78,6 +89,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             return {
                 ...prev,
                 user: newUser,
+                email: newUser.email || prev.email, // Имэйлийг шинэчилж хадгална
             };
         });
     }, []);

@@ -36,6 +36,7 @@ type SubmitOrderProps = {
 };
 
 type User = {
+    token: any;
     _id: string;
     email: string;
     phone?: string;
@@ -79,17 +80,35 @@ type HeaderProps = {
 };
 type FoodProps = {
     food: Food;
-    addToOrder: (food: Food, quantity: number) => void;
+    addToOrder: (food: Food) => void;
+    quantity?: number;
 };
 type orderStatusProps = {
     status: "success" | "error" | "";
     onClose: () => void;
 };
 
+type BasketOrderCardProps = {
+    setViewType: (view: "basket" | "orders") => void;
+    fetchBasketData: () => void;
+    fetchOrderData: () => void;
+};
 
 type AddModalProps = {
     food: Food;
     isOpen: boolean;
     onClose: () => void;
     addToOrder: (food: Food, quantity: number) => void;
+};
+type Food = {
+    _id: string;
+    name: string;
+    price: number;
+};
+
+type OrderSidebarProps = {
+    orderedFoods?: OrderedFood[];
+    setOrderedFoods?: React.Dispatch<React.SetStateAction<OrderedFood[]>>;
+    orderStatus?: "" | "success" | "error";
+    setOrderStatus?: React.Dispatch<React.SetStateAction<"" | "success" | "error">>;
 };
