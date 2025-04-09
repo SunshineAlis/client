@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-
 const OrderFoodCard: React.FC<OrderFoodProps> = ({ food }) => {
     return (
         <div className="relative border border-gray-300 shadow-lg flex flex-col sm:flex-row items-center sm:items-start gap-3 rounded-xl bg-white p-4 transition-transform hover:scale-105 w-full max-w-sm sm:max-w-full mx-auto">
@@ -8,7 +7,7 @@ const OrderFoodCard: React.FC<OrderFoodProps> = ({ food }) => {
                 <img
                     src={food.image}
                     alt={food.foodName}
-                    className="w-full sm:w-36 h-36 object-cover rounded-lg"
+                    className="w-full h-[30vh] sm:h-[35vh] md:h-[40vh] object-cover rounded-md mb-2"
                 />
             )}
             <div className="flex-1 w-full">

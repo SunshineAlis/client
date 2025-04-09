@@ -10,7 +10,8 @@ type Food = {
     image?: string | null | File;
     categoryId?: string;
     imageUrl?: string;
-
+    image?: string;
+    imageUrl?: string;
 };
 type Category = {
     _id: string;
@@ -80,8 +81,32 @@ type HeaderProps = {
 };
 type FoodProps = {
     food: Food;
-    addToOrder: (food: Food) => void;
+    addToOrder: (food: Food, quantity: number) => void;
     quantity?: number;
+}
+
+// type Food = {
+//     _id: string;
+//     foodName: string;
+//     price: number;
+//     ingredients: string;
+//     image?: string | null | File;
+//     categoryId?: string;
+//     imageUrl?: string;
+// };
+type BasketProps = {
+    orderedFoods: OrderedFood[];
+    clearCart: () => void;
+    toggleSidebar: () => void;
+    updateQuantity: (foodId: string, newQuantity: number) => void;
+    removeItem: (index: number) => void;
+    isOpen: boolean;
+    setOrderStatus: (status: "" | "success" | "error") => void;
+    orderStatus: "" | "success" | "error";
+};
+type OrderedFood = {
+    food: Food;
+    quantity: number;
 };
 type orderStatusProps = {
     status: "success" | "error" | "";
@@ -100,12 +125,6 @@ type AddModalProps = {
     onClose: () => void;
     addToOrder: (food: Food, quantity: number) => void;
 };
-type Food = {
-    _id: string;
-    name: string;
-    price: number;
-};
-
 type OrderSidebarProps = {
     orderedFoods?: OrderedFood[];
     setOrderedFoods?: React.Dispatch<React.SetStateAction<OrderedFood[]>>;

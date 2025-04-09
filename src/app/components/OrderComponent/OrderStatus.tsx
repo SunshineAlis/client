@@ -1,7 +1,6 @@
 "use client";
 const OrderStatus: React.FC<orderStatusProps> = ({ status, onClose }) => {
     if (!status) return null;
-
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center">

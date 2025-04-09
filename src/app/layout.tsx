@@ -6,7 +6,6 @@ import { CategoryContext, CategoryProvider } from "./components/provider/Categor
 import { OrderSidebarProvider } from "./components/provider/OrderSideBar";
 import { CartProvider } from "./components/provider/CartProvider";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,17 +28,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <UserProvider>
-          <CategoryProvider>
+          <CartProvider>
             <OrderSidebarProvider>
-              <CartProvider>
+              <CategoryProvider>
                 {children}
-              </CartProvider>
+              </CategoryProvider>
             </OrderSidebarProvider>
-          </CategoryProvider>
+          </CartProvider>
         </UserProvider>
       </body>
     </html >

@@ -1,9 +1,8 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
-
 type ViewType = "basket" | "orderHistory" | null;
 
-interface OrderSidebarContextType {
+type OrderSidebarContextType = {
     isOpen: boolean;
     currentView: ViewType;
     toggleSidebar: (view: ViewType) => void;

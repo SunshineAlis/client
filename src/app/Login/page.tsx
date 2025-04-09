@@ -15,17 +15,6 @@ export default function Login() {
     const [success, setSuccess] = useState("");
     const [coverUrl, setCoverUrl] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchCover = async () => {
-            try {
-                const res = await axios.get("http://localhost:3030/img/Login");
-                setCoverUrl(res.data.url);
-            } catch (error) {
-                console.error("Failed to fetch cover image:", error);
-            }
-        };
-        fetchCover();
-    }, []);
 
     const handleSubmit = async () => {
         setError("");
@@ -113,11 +102,10 @@ export default function Login() {
             </div>
             <div className="w-[50%]">
                 <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
-                    {coverUrl ? (
-                        <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
-                    ) : (
-                        <p className="text-center text-gray-500 mt-28">Loading image...</p>
-                    )}
+                    <img src="" alt="Cover" className="w-full h-full object-cover" />
+
+                    <p className="text-center text-gray-500 mt-28">Loading image...</p>
+
                 </div>
             </div>
         </div>

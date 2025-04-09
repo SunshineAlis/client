@@ -1,16 +1,18 @@
 "use client";
 import React, { useState } from "react";
-
-const AddToCardsModal: React.FC<AddModalProps> = ({ food, isOpen, onClose, addToOrder }) => {
+import { useCart } from "../provider/CartProvider"
+import { useOrderSidebar } from "../provider/OrderSideBar";
+const AddToCardsModal: React.FC<AddModalProps> = ({ food, isOpen, onClose }) => {
     const [quantity, setQuantity] = useState(1);
-
-    const increaseQuantity = () => setQuantity(quantity + 1);
+    const { toggleSidebar } = useOrderSidebar();
+    const { addToOrder } = useCart();
+    function increaseQuantity() {
+        return setQuantity(quantity + 1);
+    }
     const decreaseQuantity = () => {
         if (quantity > 1) setQuantity(quantity - 1);
     };
-
     if (!isOpen) return null;
-
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-10 px-2">
             <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-lg sm:max-w-md md:max-w-[60%] lg:max-w-[40%] max-h-[90vh] overflow-auto relative">
@@ -60,6 +62,7 @@ const AddToCardsModal: React.FC<AddModalProps> = ({ food, isOpen, onClose, addTo
                     onClick={() => {
                         addToOrder(food, quantity);
                         onClose();
+                        toggleSidebar("basket");
                     }}
                 >
                     Add to Order List

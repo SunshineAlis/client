@@ -1,25 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useUser } from "./UserProvider";
-import { useOrderSidebar } from "./OrderSideBar";
 import { useRouter } from "next/navigation";
-
-export type Food = {
-    _id: string;
-    foodName: string;
-    price: number;
-    ingredients: string;
-    image?: string | null | File;
-    categoryId?: string;
-    imageUrl?: string;
-};
-
-type OrderedFood = {
-    food: Food;
-    quantity: number;
-};
-
 type CartContextType = {
     orderedFoods: OrderedFood[];
     addToOrder: (food: Food, quantity: number) => void;
@@ -27,14 +9,14 @@ type CartContextType = {
     removeItem: (index: number) => void;
     clearCart: () => void;
     refetch: () => void;
+    setOrderedFoods: React.Dispatch<React.SetStateAction<OrderedFood[]>>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [orderedFoods, setOrderedFoods] = useState<OrderedFood[]>([]);
-    const { isAuthenticated } = useUser();
+
     const router = useRouter();
-    const { toggleSidebar } = useOrderSidebar();
     useEffect(() => {
         const savedOrder = localStorage.getItem("orderedFoods");
         if (savedOrder) {
@@ -48,47 +30,64 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
-    useEffect(() => {
-        localStorage.setItem("orderedFoods", JSON.stringify(orderedFoods));
-    }, [orderedFoods]);
 
-    const addToOrder = (food: Food, quantity: number) => {
-        if (!isAuthenticated) {
-            alert("Захиалга өгөхийн тулд нэвтэрнэ үү.");
-            router.push("/Login");
-            return;
+    useEffect(() => {
+        const savedOrder = localStorage.getItem("orderedFoods");
+        if (savedOrder) {
+            try {
+                const parsedOrder = JSON.parse(savedOrder);
+                if (JSON.stringify(parsedOrder) !== JSON.stringify(orderedFoods)) {
+                    setOrderedFoods(parsedOrder);
+                }
+            } catch (error) {
+                console.error("Failed to parse saved order:", error);
+                localStorage.removeItem("orderedFoods");
+            }
         }
+    }, [orderedFoods])
+    const addToOrder = (food: Food, quantity: number) => {
+        if (quantity <= 0) return; // Don't add if quantity is zero or negative
 
         setOrderedFoods((prev) => {
-            const existing = prev.find((item) => item.food._id === food._id);
+            const existing = prev.find(item => item.food._id === food._id);
+
+            // If item exists, update quantity, otherwise add new item
             const newOrder = existing
-                ? prev.map((item) =>
+                ? prev.map(item =>
                     item.food._id === food._id
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 )
                 : [...prev, { food, quantity }];
 
-            // Open the sidebar when adding items
-            toggleSidebar("basket");
+            // Only update localStorage if there's a change
+            if (JSON.stringify(newOrder) !== JSON.stringify(prev)) {
+                localStorage.setItem("orderedFoods", JSON.stringify(newOrder));
+            }
             return newOrder;
         });
     };
-
     const updateQuantity = (foodId: string, newQuantity: number) => {
-        setOrderedFoods((prev) =>
-            prev.map((item) =>
+        setOrderedFoods(prev => {
+            const updated = prev.map(item =>
                 item.food._id === foodId ? { ...item, quantity: newQuantity } : item
-            )
-        );
+            );
+            localStorage.setItem("orderedFoods", JSON.stringify(updated));
+            return updated;
+        });
     };
 
     const removeItem = (index: number) => {
-        setOrderedFoods((prev) => prev.filter((_, i) => i !== index));
+        setOrderedFoods(prev => {
+            const updated = prev.filter((_, i) => i !== index);
+            localStorage.setItem("orderedFoods", JSON.stringify(updated));
+            return updated;
+        });
     };
 
     const clearCart = () => {
         setOrderedFoods([]);
+        localStorage.removeItem("orderedFoods");
     };
 
     return (
@@ -110,6 +109,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                         }
                     }
                 },
+                setOrderedFoods,
             }}
         >
             {children}

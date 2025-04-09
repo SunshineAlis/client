@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useCategoryContext } from "@/app/components/provider/CategoryProvider";
 import {
   Carousel,
@@ -10,23 +10,37 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useCart } from "../components/provider/CartProvider";
+import { useUser } from "../components/provider/UserProvider"
 import FoodCard from "./FoodCart";
-
+import { useOrderSidebar } from "../components/provider/OrderSideBar";
+import { useRouter } from "next/navigation";
 const CategoryComponent = () => {
-  const { categories } = useCategoryContext();
-  const { addToOrder, orderedFoods } = useCart(); // Get orderedFoods from context
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
 
+  const { isAuthenticated } = useUser();
+
+  const { categories } = useCategoryContext();
+  const { addToOrder, orderedFoods, refetch, setOrderedFoods } = useCart(); // Get orderedFoods from context
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const { toggleSidebar } = useOrderSidebar();
   const allFoods = categories?.flatMap((cat) => cat.foods || []) || [];
+  const router = useRouter()
   const selectedFoods =
     selectedCategoryId === null
       ? allFoods
       : categories?.find((cat) => cat._id === selectedCategoryId)?.foods || [];
 
-  const handleFoodClick = (food: Food) => {
-    addToOrder(food, 1);
-    // No need to call refetch() since we're using state directly
-  };
+  const handleAddToOrder = useCallback((food: Food) => {
+    if (!isAuthenticated) {
+      alert("Захиалга өгөхийн тулд нэвтэрнэ үү.");
+      router.push("/Login");
+      return;
+    }
+
+    addToOrder(food, +1); // 只调用这个，不要手动setOrderedFoods
+    toggleSidebar("basket"); // 打开侧边栏
+  }, [isAuthenticated, router, addToOrder, toggleSidebar]);
+
+
 
   return (
     <div className="p-4 bg-gray-100 max-w-[1000px] w-full mx-auto rounded-lg">
@@ -79,7 +93,7 @@ const CategoryComponent = () => {
           <FoodCard
             key={food._id}
             food={food}
-            addToOrder={handleFoodClick}
+            addToOrder={handleAddToOrder}
             quantity={orderedFoods.find(item => item.food._id === food._id)?.quantity || 0}
           />
         ))}
@@ -88,7 +102,7 @@ const CategoryComponent = () => {
     </div>
   );
 };
-// Update your CategoryComponent.tsx
+
 
 
 

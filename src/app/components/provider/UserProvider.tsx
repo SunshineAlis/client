@@ -11,13 +11,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isAuthenticated: boolean;
         isConfirmed: boolean;
         token: string | null;
-        email: string | null; // Имэйл хадгалах талбар
+        email: string | null;
     }>({
         user: null,
         isAuthenticated: false,
         isConfirmed: false,
         token: null,
-        email: null, // Эхэндээ email null байна
+        email: null,
     });
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     isAuthenticated: true,
                     isConfirmed: localStorage.getItem("isConfirmed") === "true",
                     token,
-                    email: user.email || null, // Имэйл устгах эсвэл авах
+                    email: user.email || null,
                 });
             } catch (error) {
                 console.error("Error:", error);
@@ -75,7 +75,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             isAuthenticated: false,
             isConfirmed: false,
             token: null,
-            email: null, // Имэйлийг ч устгах
+            email: null,
         });
         router.push("/login");
     }, [router]);
@@ -89,7 +89,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             return {
                 ...prev,
                 user: newUser,
-                email: newUser.email || prev.email, // Имэйлийг шинэчилж хадгална
+                email: newUser.email || prev.email,
             };
         });
     }, []);
