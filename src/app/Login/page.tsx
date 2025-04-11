@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useUser } from "../components/provider/UserProvider";
 import { ChevronLeft } from "lucide-react";
+import { CoverImage } from "../components/CoverImg";
 
 export default function Login() {
     const router = useRouter();
@@ -42,7 +43,6 @@ export default function Login() {
             setError(error.response?.data?.message || "Login failed. Please try again.");
         }
     };
-
     return (
         <div className="max-w-[1200px] w-[100%] m-auto flex items-center my-40">
             <div className="w-[50%] my-10 px-2 py-10 mx-6 bg-white shadow-md rounded-lg">
@@ -99,9 +99,11 @@ export default function Login() {
                 </div>
             </div>
             <div className="w-[50%]">
-                <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                <CoverImage page="Login"
+                    className="w-full h-[90%] overflow-hidden rounded-md shadow-md" />
+                {/* <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
                     <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
-                </div>
+                </div> */}
             </div>
         </div>
     );

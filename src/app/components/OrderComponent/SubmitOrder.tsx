@@ -1,10 +1,12 @@
-"use client"
+"use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "../provider/UserProvider";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useCart } from "../provider/CartProvider";
+import { Checkbox } from "@/components/ui/checkbox";
+import OrderStatusModal from "./OrderStatus";
+
 type ContactInfo = {
   email: string;
   phone: string;
@@ -29,7 +31,8 @@ export default function SubmitOrder({
     address: user?.address || "",
   });
 
-  const API_URL = "https://service-jus0.onrender.com"
+  const API_URL = "https://service-jus0.onrender.com";
+
   const validateInputs = () => {
     if (!contactInfo.email || !contactInfo.phone || !contactInfo.address) {
       throw new Error("Email, phone, and address are required");
@@ -83,6 +86,7 @@ export default function SubmitOrder({
       headers: { Authorization: `Bearer ${token}` },
     });
   };
+
   const submitFoodOrder = async () => {
     try {
       setLoading(true);
@@ -95,13 +99,9 @@ export default function SubmitOrder({
       const updatedUser = await updateUserInfo(token);
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
-
       await submitOrder(token, updatedUser);
-
       setOrderStatus("success");
       clearCart();
-      router.push("/");
-      alert("Successfull ordered")
     } catch (error: any) {
       console.error("Order error:", error);
       setOrderStatus("error");
@@ -113,23 +113,19 @@ export default function SubmitOrder({
 
   useEffect(() => {
     if (orderStatus === "success") {
-      const timer = setTimeout(() => router.push("/"), 2000);
+      const timer = setTimeout(() => router.push("/"), 3000);
       return () => clearTimeout(timer);
     }
   }, [orderStatus, router]);
 
-  if (orderStatus === "success") {
-    return (
-      <div className="p-4 bg-green-100 text-green-800 rounded-md">
-        Order placed successfully! Redirecting...
-      </div>
-    );
-  }
   return (
-    <div className="space-y-4 p-4 bg-white rounded-lg shadow">
+    <div className="space-y-4 p-4 bg-white rounded-lg shadow relative z-10">
+      <OrderStatusModal visible={orderStatus === "success"} />
+
       <h2 className="text-xl font-bold mb-4">Order Confirmation</h2>
       <div className="space-y-3">
         <h3 className="font-semibold">Contact info</h3>
+
         <div>
           <label htmlFor="email" className="text-gray-600 ml-2 block mb-1">
             Email
@@ -188,9 +184,9 @@ export default function SubmitOrder({
       <button
         onClick={submitFoodOrder}
         disabled={loading || !isConfirmed}
-        className={`w - full py - 2 rounded - lg mt - 4 ${loading || !isConfirmed
+        className={`w-full py-2 rounded-lg mt-4 p-3 text-white ${loading || !isConfirmed
           ? "bg-gray-400 cursor-not-allowed"
-          : "bg-blue-600 hover:bg-blue-700 text-white"
+          : "bg-blue-600 hover:bg-blue-700"
           }`}
       >
         {loading ? "Processing..." : "Submit Order"}

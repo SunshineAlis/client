@@ -5,37 +5,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react"
 import { useRouter } from 'next/navigation';
+import { CoverImage } from "../components/CoverImg";
 
 const DirectPasswordReset = () => {
   const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const API_URL = "https://service-jus0.onrender.com"
   const router = useRouter();
-  const [coverUrl, setCoverUrl] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchCover = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/img/forgotPassword`);
-        setCoverUrl(res.data.url);
-      } catch (error) {
-        console.error("Failed to fetch cover image:", error);
-      }
-    };
-    fetchCover();
-  }, []);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const res = await axios.post(`${API_URL}/user/Pass`, {
+      const res = await axios.put(`${API_URL}/user/Pass`, {
         email,
-        newPassword,
+        password,
       });
-
       if (res.status === 200) {
         setMessage('Password reset successful');
+        router.push("/Login")
       }
     } catch (error: any) {
       setMessage('Failed to reset password');
@@ -65,8 +53,8 @@ const DirectPasswordReset = () => {
             className="border-2 border-gray-300 px-4 py-3 rounded-lg my-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter new password"
             type={showPassword ? "text" : "password"}
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
@@ -96,15 +84,16 @@ const DirectPasswordReset = () => {
       </div>
       <div className="w-[50%]">
         <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
-          {coverUrl ? (
-            <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
-          ) : (
-            <p className="text-center text-gray-500 mt-28">Loading image...</p>
-          )}
+          <div className="w-[50%]">
+            <CoverImage page="Password"
+              className="w-full h-[90%] overflow-hidden rounded-md shadow-md" />
+          </div>
         </div>
+        {/* <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                    <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+                </div> */}
       </div>
     </div>
   );
 };
-
 export default DirectPasswordReset;

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
+import { CoverImage } from "@/app/components/CoverImg";
 
 export const EmailStep = ({
   setStep,
@@ -85,10 +86,17 @@ export const EmailStep = ({
         </div>
       </div>
       <div className="w-[50%]">
+
         <div className="w-full h-full overflow-hidden rounded-md shadow-md">
-          <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+          <CoverImage page="sign-up"
+            className="w-full h-full object-cover" />
         </div>
+
+        {/* <div className="w-full h-full overflow-hidden rounded-md shadow-md">
+          <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+        </div> */}
+
       </div>
-    </div>
+    </div >
   );
 };

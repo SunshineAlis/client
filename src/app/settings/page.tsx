@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { CoverImage } from '../components/CoverImg';
 const Settings: React.FC = () => {
     const { user, setUser } = useUser();
     const router = useRouter();
@@ -163,11 +164,15 @@ const Settings: React.FC = () => {
                 </div>
             </div>
             <div className="w-[50%]">
-                <div className="w-full h-full overflow-hidden rounded-md shadow-md">
-                    <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+                <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                    <CoverImage page="settings"
+                        className="w-full h-full object-cover" />
                 </div>
+                {/* <div className="w-full h-full overflow-hidden rounded-md shadow-md">
+                    <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+                </div> */}
             </div>
-        </div>
+        </div >
     );
 };
 

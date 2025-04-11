@@ -3,10 +3,16 @@ import React, { useState } from "react";
 import Basket from "./basket";
 import OrderHistory from "./OrderHistory";
 import { useOrderSidebar } from "../provider/OrderSideBar";
-const OrderSidebar: React.FC = () => {
+
+interface OrderSidebarProps {
+    setOrderStatus: (status: "success" | "error" | "") => void;
+    orderStatus: "success" | "error" | "";
+}
+
+const OrderSidebar: React.FC<OrderSidebarProps> = ({ setOrderStatus, orderStatus }) => {
     const { isOpen, closeSidebar } = useOrderSidebar();
     const [activeTab, setActiveTab] = useState<"basket" | "orderHistory">("basket");
-    const [orderStatus, setOrderStatus] = useState<"" | "success" | "error">("");
+
     return (
         <div
             className={`fixed top-0 right-0 w-full sm:w-[400px] h-full bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"

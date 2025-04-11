@@ -98,12 +98,18 @@ type AddModalProps = {
     onClose: () => void;
     addToOrder: (food: Food, quantity: number) => void;
 };
+
 type OrderSidebarProps = {
-    orderedFoods?: OrderedFood[];
-    setOrderedFoods?: React.Dispatch<React.SetStateAction<OrderedFood[]>>;
-    orderStatus?: "" | "success" | "error";
-    setOrderStatus?: React.Dispatch<React.SetStateAction<"" | "success" | "error">>;
-};
+    setOrderStatus: (status: "success" | "error" | "") => void;
+    orderStatus: "success" | "error" | "";
+}
+type OrderStatusProps = {
+    status?: "success" | "error" | "";
+    onClose?: () => void;
+    visible?: boolean;
+}
+
+
 type ViewType = "basket" | "orderHistory" | null;
 
 type OrderSidebarContextType = {

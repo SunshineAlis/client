@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft } from "lucide-react";
 import axios from "axios";
+import { CoverImage } from "@/app/components/CoverImg";
 export const Password = ({ userData }: { userData: string }) => {
   const router = useRouter();
   const [password, setPassword] = useState<string>("");
@@ -98,8 +99,13 @@ export const Password = ({ userData }: { userData: string }) => {
       </div>
       <div className="w-[50%]">
         <div className="w-full h-full overflow-hidden rounded-md shadow-md">
-          <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+          <CoverImage page="sign-up"
+            className="w-full h-full object-cover" />
         </div>
+
+        {/* <div className="w-full h-full overflow-hidden rounded-md shadow-md">
+          <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
+        </div> */}
       </div>
     </div>
   );
