@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../provider/UserProvider";
 import axios from "axios";
-import { useOrderSidebar } from "../provider/OrderSideBar";
-const OrderHistory = () => {
+
+function OrderHistory() {
     const { user } = useUser();
     const [orders, setOrders] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
-    const { isOpen, currentView, closeSidebar } = useOrderSidebar();
+    const API_URL = "https://service-jus0.onrender.com"
     useEffect(() => {
         if (!user || !user.email) {
             setError("");
@@ -15,7 +15,7 @@ const OrderHistory = () => {
         }
         const fetchOrderHistory = async () => {
             try {
-                const response = await axios.post("http://localhost:3030/order/cli",
+                const response = await axios.post(`${API_URL}/order/cli`,
                     {
                         email: user.email
                     },
@@ -70,8 +70,7 @@ const OrderHistory = () => {
                                             ? 'bg-green-500'
                                             : order.orderStatus === 'pending'
                                                 ? 'bg-yellow-500'
-                                                : 'bg-blue-500'
-                                            }`}
+                                                : 'bg-blue-500'}`}
                                     >
                                         {order.orderStatus.toUpperCase()}
                                     </span>
@@ -102,6 +101,6 @@ const OrderHistory = () => {
         </div>
 
     );
-};
+}
 
 export default OrderHistory;

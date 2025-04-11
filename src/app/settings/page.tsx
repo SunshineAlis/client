@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation';
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
-
-
 const Settings: React.FC = () => {
     const { user, setUser } = useUser();
     const router = useRouter();
@@ -21,19 +19,7 @@ const Settings: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [coverUrl, setCoverUrl] = useState<string | null>(null);
-    useEffect(() => {
-        const fetchCover = async () => {
-            try {
-                const res = await axios.get("http://localhost:3030/img/Settings");
-                setCoverUrl(res.data.url);
-            } catch (error) {
-                console.error("Failed to fetch cover image:", error);
-            }
-        };
-
-        fetchCover();
-    }, []);
+    const API_URL = "https://service-jus0.onrender.com"
     useEffect(() => {
         if (user) {
             setFormData({
@@ -80,7 +66,7 @@ const Settings: React.FC = () => {
                 return;
             }
             await axios.put(
-                'http://localhost:3030/user/information',
+                `${API_URL}/user/information`,
                 updatedData,
                 {
                     headers: {
@@ -107,8 +93,7 @@ const Settings: React.FC = () => {
     };
 
     return (
-        <div className="max-w-[1200px] w-full mx-auto flex items-center my-40">
-
+        <div className="max-w-[1200px] w-full mx-auto flex items-center p-20">
             <div className="w-1/2 my-10 px-2 py-10 mx-6 bg-white shadow-md rounded-lg">
                 <Button variant="outline"
                     className="mx-10 hover: bg-blue-500" size="icon" onClick={() => router.push("/")}>
@@ -178,12 +163,8 @@ const Settings: React.FC = () => {
                 </div>
             </div>
             <div className="w-[50%]">
-                <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
-                    {coverUrl ? (
-                        <img src={coverUrl} alt="Cover" className="w-full h-full object-cover" />
-                    ) : (
-                        <p className="text-center text-gray-500 mt-28">Loading image...</p>
-                    )}
+                <div className="w-full h-full overflow-hidden rounded-md shadow-md">
+                    <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
                 </div>
             </div>
         </div>

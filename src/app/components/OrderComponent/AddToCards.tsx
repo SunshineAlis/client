@@ -1,12 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { useCart } from "../provider/CartProvider"
+import { useUser } from "../provider/UserProvider"
 import { useOrderSidebar } from "../provider/OrderSideBar";
+import { useRouter } from "next/navigation";
 const AddToCardsModal: React.FC<AddModalProps> = ({ food, isOpen, onClose }) => {
     const [quantity, setQuantity] = useState(1);
     const { toggleSidebar } = useOrderSidebar();
     const { addToOrder } = useCart();
-    function increaseQuantity() {
+    const { isAuthenticated } = useUser();
+    const router = useRouter();
+    const increaseQuantity = () => {
         return setQuantity(quantity + 1);
     }
     const decreaseQuantity = () => {
@@ -60,6 +64,12 @@ const AddToCardsModal: React.FC<AddModalProps> = ({ food, isOpen, onClose }) => 
                 <button
                     className="w-full mt-4 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition text-sm sm:text-base"
                     onClick={() => {
+                        if (!isAuthenticated) {
+                            alert("Please login");
+                            router.push("/Login")
+                            onClose();
+                            return;
+                        }
                         addToOrder(food, quantity);
                         onClose();
                         toggleSidebar("basket");

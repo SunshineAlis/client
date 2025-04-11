@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -13,9 +13,7 @@ export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const [coverUrl, setCoverUrl] = useState<string | null>(null);
-
-
+    const API_URL = "https://service-jus0.onrender.com"
     const handleSubmit = async () => {
         setError("");
         setSuccess("");
@@ -28,7 +26,7 @@ export default function Login() {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:3030/user/login", {
+            const response = await axios.post(`${API_URL}/user/login`, {
                 email,
                 password,
             });
@@ -102,10 +100,7 @@ export default function Login() {
             </div>
             <div className="w-[50%]">
                 <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
-                    <img src="" alt="Cover" className="w-full h-full object-cover" />
-
-                    <p className="text-center text-gray-500 mt-28">Loading image...</p>
-
+                    <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
                 </div>
             </div>
         </div>

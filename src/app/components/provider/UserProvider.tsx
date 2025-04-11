@@ -1,9 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-
 const UserContext = createContext<UserContextType | undefined>(undefined);
-
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const [state, setState] = useState<{
@@ -19,11 +17,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         token: null,
         email: null,
     });
-
     useEffect(() => {
         const token = localStorage.getItem("token");
         const userJson = localStorage.getItem("user");
-
         if (token && userJson) {
             try {
                 const user = JSON.parse(userJson);
@@ -40,7 +36,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
     }, []);
-
     const setUser = useCallback((user: User | null) => {
         if (user) {
             localStorage.setItem("user", JSON.stringify(user));
@@ -48,7 +43,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 ...prev,
                 user,
                 isAuthenticated: true,
-                email: user.email, // Имэйл хадгалах
+                email: user.email,
             }));
         } else {
             localStorage.removeItem("user");
@@ -56,16 +51,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 ...prev,
                 user: null,
                 isAuthenticated: false,
-                email: null, // Имэйлийг устгах
+                email: null,
             }));
         }
     }, []);
-
     const setIsConfirmed = useCallback((isConfirmed: boolean) => {
         localStorage.setItem("isConfirmed", String(isConfirmed));
         setState(prev => ({ ...prev, isConfirmed }));
     }, []);
-
     const logout = useCallback(() => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -93,7 +86,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             };
         });
     }, []);
-
     return (
         <UserContext.Provider
             value={{

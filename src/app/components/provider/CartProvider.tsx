@@ -1,22 +1,12 @@
 "use client";
-
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-type CartContextType = {
-    orderedFoods: OrderedFood[];
-    addToOrder: (food: Food, quantity: number) => void;
-    updateQuantity: (foodId: string, newQuantity: number) => void;
-    removeItem: (index: number) => void;
-    clearCart: () => void;
-    refetch: () => void;
-    setOrderedFoods: React.Dispatch<React.SetStateAction<OrderedFood[]>>;
-};
+import { useUser } from "./UserProvider";
+
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [orderedFoods, setOrderedFoods] = useState<OrderedFood[]>([]);
-
-    const router = useRouter();
+    const { isAuthenticated } = useUser();
     useEffect(() => {
         const savedOrder = localStorage.getItem("orderedFoods");
         if (savedOrder) {
@@ -29,8 +19,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
     }, []);
-
-
     useEffect(() => {
         const savedOrder = localStorage.getItem("orderedFoods");
         if (savedOrder) {
@@ -46,12 +34,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, [orderedFoods])
     const addToOrder = (food: Food, quantity: number) => {
-        if (quantity <= 0) return; // Don't add if quantity is zero or negative
-
+        if (!isAuthenticated) {
+            alert("Please login.");
+            return;
+        }
+        if (quantity <= 0) return;
         setOrderedFoods((prev) => {
             const existing = prev.find(item => item.food._id === food._id);
-
-            // If item exists, update quantity, otherwise add new item
             const newOrder = existing
                 ? prev.map(item =>
                     item.food._id === food._id
@@ -60,7 +49,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 )
                 : [...prev, { food, quantity }];
 
-            // Only update localStorage if there's a change
             if (JSON.stringify(newOrder) !== JSON.stringify(prev)) {
                 localStorage.setItem("orderedFoods", JSON.stringify(newOrder));
             }
@@ -84,12 +72,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             return updated;
         });
     };
-
     const clearCart = () => {
         setOrderedFoods([]);
         localStorage.removeItem("orderedFoods");
     };
-
     return (
         <CartContext.Provider
             value={{

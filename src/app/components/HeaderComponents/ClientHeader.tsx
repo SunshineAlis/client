@@ -10,11 +10,6 @@ import axios from "axios";
 import LoginMenu from "../HeaderComponents/LoginMenu";
 import { Logo } from "../HeaderComponents/Logo";
 import { useOrderSidebar } from "../provider/OrderSideBar";
-
-interface HeaderProps {
-  orderedFoodsCount: number;
-}
-
 const ClientHeader: React.FC<HeaderProps> = ({ orderedFoodsCount }) => {
   const router = useRouter();
   const { isAuthenticated, logout, user, setUser } = useUser();
@@ -24,11 +19,12 @@ const ClientHeader: React.FC<HeaderProps> = ({ orderedFoodsCount }) => {
   });
   const [error, setError] = useState("");
   const { toggleSidebar } = useOrderSidebar();
-
+  const API_URL = "https://service-jus0.onrender.com"
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  if (!isAuthenticated) { }
   const confirmAddress = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -45,7 +41,7 @@ const ClientHeader: React.FC<HeaderProps> = ({ orderedFoodsCount }) => {
         return;
       }
 
-      await axios.put("http://localhost:3030/user/information", updatedData, {
+      await axios.put(`${API_URL}/user/information`, updatedData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

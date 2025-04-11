@@ -2,7 +2,7 @@
 import * as React from "react";
 import ResIcon from "../../../../public/icon/ResIcon";
 
-export const Logo = ({ className = "" }) => {
+export const Logo = () => {
   return (
     <div className="flex items-center justify-start ml-20 pl-10">
       <ResIcon />

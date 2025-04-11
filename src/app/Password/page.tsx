@@ -11,14 +11,13 @@ const DirectPasswordReset = () => {
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-
+  const API_URL = "https://service-jus0.onrender.com"
   const router = useRouter();
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   useEffect(() => {
     const fetchCover = async () => {
       try {
-        const res = await axios.get("http://localhost:3030/img/forgotPassword");
+        const res = await axios.get(`${API_URL}/img/forgotPassword`);
         setCoverUrl(res.data.url);
       } catch (error) {
         console.error("Failed to fetch cover image:", error);
@@ -30,7 +29,7 @@ const DirectPasswordReset = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:3030/user/Pass', {
+      const res = await axios.post(`${API_URL}/user/Pass`, {
         email,
         newPassword,
       });
@@ -89,7 +88,7 @@ const DirectPasswordReset = () => {
           </div>
 
           {message && (
-            <p className={`text-center mt-2 ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
+            <p className={`text - center mt - 2 ${message.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
               {message}
             </p>
           )}

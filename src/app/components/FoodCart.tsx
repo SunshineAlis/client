@@ -1,11 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import AddToCardsModal from "./OrderComponent/AddToCards";
-
-
 const FoodCard: React.FC<FoodProps> = ({ food, addToOrder, quantity = 0 }: FoodProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <div className="relative border border-gray-300 shadow-lg flex flex-col justify-center items-center rounded-xl bg-white p-4">
       {food.image && typeof food.image === "string" && (
@@ -21,7 +18,6 @@ const FoodCard: React.FC<FoodProps> = ({ food, addToOrder, quantity = 0 }: FoodP
       >
         +
       </button>
-
       <div className="flex justify-between items-center mt-3 w-full px-2">
         <span className="text-red-500 font-bold truncate w-[70%] overflow-hidden hover:whitespace-normal hover:bg-white hover:shadow-md px-2 py-1 rounded-md">
           {food.foodName}

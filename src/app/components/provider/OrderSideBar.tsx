@@ -1,13 +1,5 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
-type ViewType = "basket" | "orderHistory" | null;
-
-type OrderSidebarContextType = {
-    isOpen: boolean;
-    currentView: ViewType;
-    toggleSidebar: (view: ViewType) => void;
-    closeSidebar: () => void;
-}
 
 const OrderSidebarContext = createContext<OrderSidebarContextType | undefined>(undefined);
 
@@ -23,19 +15,16 @@ export const OrderSidebarProvider: React.FC<{ children: React.ReactNode }> = ({ 
             setIsOpen(true);
         }
     };
-
     const closeSidebar = () => {
         setIsOpen(false);
         setCurrentView(null);
     };
-
     return (
         <OrderSidebarContext.Provider value={{ isOpen, currentView, toggleSidebar, closeSidebar }}>
             {children}
         </OrderSidebarContext.Provider>
     );
 };
-
 export const useOrderSidebar = () => {
     const context = useContext(OrderSidebarContext);
     if (!context) {

@@ -1,7 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-
 type CategoryContextType = {
     categories: Category[];
     loading: boolean;
@@ -14,9 +13,7 @@ type CategoryContextType = {
     updateFoodInCategory: (updatedFood: Food) => void;
     deleteFoodFromCategory: (foodId: string, categoryId: string) => void;
 };
-
 export const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
-
 export const useCategoryContext = () => {
     const context = useContext(CategoryContext);
     if (!context) {
@@ -24,22 +21,21 @@ export const useCategoryContext = () => {
     }
     return context;
 };
-
 export const CategoryProvider = ({ children }: { children: React.ReactNode }) => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-
+    const API_URL = "https://service-jus0.onrender.com"
     const fetchData = async () => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axios.get("http://localhost:3030/category");
+            const response = await axios.get(`${API_URL}/category`);
             const categoriesData = await Promise.all(
                 response.data.data.map(async (category: Category) => {
                     try {
                         const foodResponse = await axios.get<{ foods: Food[] }>(
-                            `http://localhost:3030/foods/${category._id}/foods`
+                            `${API_URL}/foods/${category._id}/foods`
                         );
                         const foods = foodResponse.data.foods || [];
                         return {
@@ -61,11 +57,9 @@ export const CategoryProvider = ({ children }: { children: React.ReactNode }) =>
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchData();
-    }, []);
-
+    }, [])
     const addCategory = (newCategory: Category) => {
         setCategories((prevCategories) => [...prevCategories, newCategory]);
     };
@@ -77,11 +71,9 @@ export const CategoryProvider = ({ children }: { children: React.ReactNode }) =>
             )
         );
     };
-
     const deleteCategory = (categoryId: string) => {
         setCategories((prevCategories) => prevCategories.filter((category) => category._id !== categoryId));
     };
-
     const addFoodToCategory = (newFood: Food) => {
         setCategories((prevCategories) =>
             prevCategories.map((category) =>
@@ -95,7 +87,6 @@ export const CategoryProvider = ({ children }: { children: React.ReactNode }) =>
             )
         );
     };
-
     const updateFoodInCategory = (updatedFood: Food) => {
         setCategories((prevCategories) =>
             prevCategories.map((category) =>
@@ -109,7 +100,6 @@ export const CategoryProvider = ({ children }: { children: React.ReactNode }) =>
             )
         );
     };
-
     const deleteFoodFromCategory = (foodId: string, categoryId: string) => {
         setCategories((prevCategories) =>
             prevCategories.map((category) =>
@@ -123,7 +113,6 @@ export const CategoryProvider = ({ children }: { children: React.ReactNode }) =>
             )
         );
     };
-
     return (
         <CategoryContext.Provider
             value={{

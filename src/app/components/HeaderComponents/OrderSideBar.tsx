@@ -1,18 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Basket from "./basket";
-import { useUser } from "../provider/UserProvider";
-import { useRouter } from "next/navigation";
 import OrderHistory from "./OrderHistory";
 import { useOrderSidebar } from "../provider/OrderSideBar";
-
 const OrderSidebar: React.FC = () => {
-    const { isAuthenticated } = useUser();
-    const router = useRouter();
-    const { isOpen, toggleSidebar, closeSidebar } = useOrderSidebar();
+    const { isOpen, closeSidebar } = useOrderSidebar();
     const [activeTab, setActiveTab] = useState<"basket" | "orderHistory">("basket");
     const [orderStatus, setOrderStatus] = useState<"" | "success" | "error">("");
-
     return (
         <div
             className={`fixed top-0 right-0 w-full sm:w-[400px] h-full bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"

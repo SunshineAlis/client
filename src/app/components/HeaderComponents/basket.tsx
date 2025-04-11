@@ -7,13 +7,6 @@ import OrderStatus from "../OrderComponent/OrderStatus";
 import { CgClose } from "react-icons/cg";
 import { useCart } from "../provider/CartProvider";
 
-interface BasketProps {
-  toggleSidebar: () => void;
-  isOpen: boolean;
-  setOrderStatus: (status: "" | "success" | "error") => void;
-  orderStatus: "" | "success" | "error";
-}
-
 const Basket: React.FC<BasketProps> = ({
   toggleSidebar,
   isOpen,
@@ -22,14 +15,11 @@ const Basket: React.FC<BasketProps> = ({
 }) => {
   const { isAuthenticated } = useUser();
   const { orderedFoods, updateQuantity, removeItem, clearCart } = useCart();
-
   if (!isAuthenticated) return null;
-
   const totalPrice = orderedFoods.reduce(
     (total, order) => total + order.food.price * order.quantity,
     0
   );
-
   return (
     <div>
       <button
