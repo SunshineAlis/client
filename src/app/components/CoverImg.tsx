@@ -21,7 +21,7 @@ export const CoverImage = ({ page, className }: imageProps) => {
                 setUrl(res.data.url);
             } catch (err) {
                 console.error("Failed to fetch image:", err);
-                setUrl("");
+                setUrl("/login.jpg");
             }
         };
         fetchImage();
