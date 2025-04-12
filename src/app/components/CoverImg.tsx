@@ -13,7 +13,7 @@ export const CoverImage = ({ page, className }: imageProps) => {
     useEffect(() => {
         const fetchImage = async () => {
             if (!page) {
-                setUrl("");
+                setUrl("/BG.png");
                 return;
             }
             try {
