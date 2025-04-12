@@ -13,7 +13,6 @@ export const CoverImage = ({ page, className }: imageProps) => {
 
     useEffect(() => {
         const fetchImage = async () => {
-
             if (!page) {
                 setUrl("/BG.png");
                 return;
@@ -21,19 +20,11 @@ export const CoverImage = ({ page, className }: imageProps) => {
 
             try {
                 const res = await axios.get(`${API_URL}/img/${page}`);
-
-                if (!res.data?.url) {
-                    setUrl("/login.jpg");
-                } else {
-                    setUrl(res.data.url);
-                }
+                console.log("Fetched image URL:", res.data.url);
+                setUrl(res.data?.url || "/login.jpg");
             } catch (err) {
                 console.error("Failed to fetch image:", err);
-                if (page === "home") {
-                    setUrl("/BG.png");
-                } else {
-                    setUrl("/login.jpg");
-                }
+                setUrl(page === "home" ? "/BG.png" : "/login.jpg");
             }
         };
 
