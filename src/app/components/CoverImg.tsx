@@ -10,20 +10,33 @@ type imageProps = {
 export const CoverImage = ({ page, className }: imageProps) => {
     const [url, setUrl] = useState<string | null>(null);
     const API_URL = "https://service-jus0.onrender.com";
+
     useEffect(() => {
         const fetchImage = async () => {
+
             if (!page) {
                 setUrl("/BG.png");
                 return;
             }
+
             try {
                 const res = await axios.get(`${API_URL}/img/${page}`);
-                setUrl(res.data.url);
+
+                if (!res.data?.url) {
+                    setUrl("/login.jpg");
+                } else {
+                    setUrl(res.data.url);
+                }
             } catch (err) {
                 console.error("Failed to fetch image:", err);
-                setUrl("/login.jpg");
+                if (page === "home") {
+                    setUrl("/BG.png");
+                } else {
+                    setUrl("/login.jpg");
+                }
             }
         };
+
         fetchImage();
     }, [page]);
 
@@ -35,7 +48,7 @@ export const CoverImage = ({ page, className }: imageProps) => {
         <img
             src={url}
             alt={`${page || "default"} cover`}
-            className={`w - full h - 64 object - cover rounded - lg shadow ${className} `}
+            className={`w-full h-64 object-cover rounded-lg shadow ${className}`}
         />
     );
 };
