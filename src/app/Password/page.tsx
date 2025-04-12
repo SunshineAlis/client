@@ -84,16 +84,14 @@ const DirectPasswordReset = () => {
       </div>
       <div className="w-[50%]">
         <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
-          <div className="w-[50%]">
-            <CoverImage page="Password"
-              className="w-full h-[90%] overflow-hidden rounded-md shadow-md" />
-          </div>
+          <CoverImage page="Password"
+            className="w-full h-[90%] overflow-hidden rounded-md shadow-md" />
         </div>
         {/* <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
                     <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
                 </div> */}
       </div>
-    </div>
+    </div >
   );
 };
 export default DirectPasswordReset;

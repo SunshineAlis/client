@@ -99,11 +99,13 @@ export default function Login() {
                 </div>
             </div>
             <div className="w-[50%]">
-                <CoverImage page="Login"
-                    className="w-full h-[90%] overflow-hidden rounded-md shadow-md" />
-                {/* <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                    <CoverImage page="Login"
+                        className=" w-full h-full object-cover" />
+                    {/* <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
                     <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
                 </div> */}
+                </div>
             </div>
         </div>
     );

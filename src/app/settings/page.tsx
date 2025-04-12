@@ -94,8 +94,8 @@ const Settings: React.FC = () => {
     };
 
     return (
-        <div className="max-w-[1200px] w-full mx-auto flex items-center p-20">
-            <div className="w-1/2 my-10 px-2 py-10 mx-6 bg-white shadow-md rounded-lg">
+        <div className="max-w-[1200px] w-full mx-auto flex items-center p-5">
+            <div className="w-1/2 my-10 px-2 mx-6 bg-white shadow-md rounded-lg">
                 <Button variant="outline"
                     className="mx-10 hover: bg-blue-500" size="icon" onClick={() => router.push("/")}>
                     <ChevronLeft />
@@ -164,9 +164,9 @@ const Settings: React.FC = () => {
                 </div>
             </div>
             <div className="w-[50%]">
-                <div className="w-full h-[90%] overflow-hidden rounded-md shadow-md">
+                <div className="w-full overflow-hidden rounded-md shadow-md">
                     <CoverImage page="settings"
-                        className="w-full h-full object-cover" />
+                        className="w-full  object-cover" />
                 </div>
                 {/* <div className="w-full h-full overflow-hidden rounded-md shadow-md">
                     <img src="login.jpg" alt="Cover" className="w-full h-full object-cover" />
