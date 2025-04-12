@@ -13,7 +13,7 @@ const FoodClient: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen m-auto max-w-[1000px] relative">
       <ClientHeader orderedFoodsCount={orderedFoods.length} />
-      <CoverImage className="rounded-lg max-w-[1100px] w-[100%] m-auto" />
+      <CoverImage page="/" className="rounded-lg max-w-[1100px] w-[100%] m-auto" />
       <CategoryComponent />
       <RenderingCate />
       <OrderSidebar
